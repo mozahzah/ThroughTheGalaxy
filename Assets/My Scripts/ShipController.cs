@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using ThroughtTheGalaxy.Mechanics;
+using ThroughtTheGalaxy.UI;
 
 
 namespace ThroughtTheGalaxy.Controller{
@@ -13,15 +14,14 @@ namespace ThroughtTheGalaxy.Controller{
         [Header("General")]
         [Tooltip("In ms")] [SerializeField] float xSpeed = 15f;
         [Tooltip("In ms")] [SerializeField] float ySpeed = 15f;
+        [SerializeField] Canvas inGameCanvas;
 
         [Header("Throw Control")]
         [SerializeField] float controlPitchFactor = -25f;
         [SerializeField] float controlRollFactor = -25f;
         float yThrow, xThrow;
 
-
         [Header("Guns")]
-
         [SerializeField] Gun gun;
         Gun.WeaponType caseSwitch = 0;
 
@@ -30,14 +30,15 @@ namespace ThroughtTheGalaxy.Controller{
         private void Start() 
         {
             gun.SwitchWeapon(i);
+            UpdateCanvas();
         }
 
         void Update()
         {
-            //VerticalMouvement(); 
             HorizontalMouvement();
             ProcessRotation();
             SwitchWeapon();
+            
 
             caseSwitch = gun.currentWeapon;
             
@@ -59,6 +60,7 @@ namespace ThroughtTheGalaxy.Controller{
   
         }
 
+        // Mouvement
         private void ProcessRotation()
         {
             float pitch = yThrow * controlPitchFactor;
@@ -66,6 +68,7 @@ namespace ThroughtTheGalaxy.Controller{
             float roll= Mathf.Lerp(xThrow * controlRollFactor, 0, 0.1f * Time.deltaTime);
             transform.localRotation = Quaternion.Euler(pitch, yaw, roll);
         }
+
         private void HorizontalMouvement()
         {
             xThrow = CrossPlatformInputManager.GetAxis("Horizontal");
@@ -73,14 +76,8 @@ namespace ThroughtTheGalaxy.Controller{
             float rawNewXpos = transform.localPosition.x + xOffset;
             transform.localPosition = new Vector3(rawNewXpos, transform.localPosition.y, transform.localPosition.z);
         }
-        // private void VerticalMouvement()
-        // {
-        //     yThrow = CrossPlatformInputManager.GetAxis("Vertical");
-        //     float yOffset = yThrow * ySpeed * Time.deltaTime;
-        //     float rawNewYpos = transform.localPosition.y + yOffset;
-        //     transform.localPosition = new Vector3(transform.localPosition.x,  rawNewYpos,transform.localPosition.z);
-        // }
 
+        // Gun Activation
         private bool Shooting()
         {
             if (CrossPlatformInputManager.GetAxis("Fire1") == 1)
@@ -88,23 +85,6 @@ namespace ThroughtTheGalaxy.Controller{
                 return true;
             }
             else return false;
-        }
-
-        private void SwitchWeapon()
-        {   
-           if (Input.GetKeyDown(KeyCode.Q))
-           {
-               int count = Enum.GetValues(typeof(Gun.WeaponType)).Length;
-               if (i == count - 1)
-               {
-                   i = 0;
-               }
-               else
-               {
-                    i ++;
-               }
-                gun.SwitchWeapon(i);   
-           }
         }
 
         private void LaunchMissile()
@@ -121,6 +101,41 @@ namespace ThroughtTheGalaxy.Controller{
             {
                 gun.ReleaseNanoBots();
             }
+        }
+
+         private void SwitchWeapon()
+        {   
+           if (Input.GetKeyDown(KeyCode.Q))
+           {
+               int count = Enum.GetValues(typeof(Gun.WeaponType)).Length;
+               if (i == count - 1)
+               {
+                   i = 0;
+               }
+               else
+               {
+                    i ++;
+               }
+                gun.SwitchWeapon(i);
+                UpdateCanvas();
+           }
+        }
+
+        private void UpdateCanvas()
+        {
+            caseSwitch = gun.currentWeapon;
+            switch (caseSwitch)
+            {
+                case Gun.WeaponType.MG:
+                inGameCanvas.GetComponent<InGameCanvas>().selectedWeapon = 0;
+                break;
+                case Gun.WeaponType.MSL:
+                inGameCanvas.GetComponent<InGameCanvas>().selectedWeapon = 1;
+                break;
+                case Gun.WeaponType.NB:
+                inGameCanvas.GetComponent<InGameCanvas>().selectedWeapon = 2;
+                break;
+            }   
         }
     }
 }

@@ -51,13 +51,14 @@ namespace ThroughtTheGalaxy.Mechanics
             audioSource = GetComponent<AudioSource>();
             MG_BulletParticleSystem = GetComponent<ParticleSystem>();
             SetMGWeaponStats();
+            RayCastForTracking();
         }
 
         void Update()
         {
             CrossairAim();
-            SetWeaponRayCast();
             ProcessMGFire();
+            SetWeaponRayCast();
         }
 
         // Aiming and Targeting
@@ -71,20 +72,22 @@ namespace ThroughtTheGalaxy.Mechanics
         }
         private void SetWeaponRayCast()
         {
-            if (currentWeapon == WeaponType.MG)
-            {
-                TurnOffTargeting();
-            }
-            else
+            if (currentWeapon == WeaponType.MSL || currentWeapon == WeaponType.NB)
             {
                 RayCastForTracking();
             }
+            else
+            {
+                TurnOffTargeting();
+            }
         }
+
         private void RayCastForTracking()
         {
             RaycastHit[] hits = Physics.SphereCastAll(transform.position, 50, transform.TransformDirection(Vector3.forward), Mathf.Infinity);
             targetedEnemies = Array.FindAll(hits, e => e.collider.gameObject.GetComponent<Enemy>());
 
+            // Array Sorting by Distance
             for (int i = 0; i < targetedEnemies.Length - 1; i++)
             {
                 for (int j = i + 1; j < targetedEnemies.Length; j++)
@@ -104,30 +107,34 @@ namespace ThroughtTheGalaxy.Mechanics
                 }
             }
 
-            TurnOffTargeting();
 
+            TurnOffTargeting();
             // Weapon Specific Targetting Methods
             if (currentWeapon == WeaponType.MSL)
             {
-                targetedEnemies[0].collider.gameObject.GetComponent<Enemy>().isSelected = true;
+                if (targetedEnemies != null || targetedEnemies.Length != 0)
+                {
+                    targetedEnemies[0].collider.gameObject.GetComponent<Enemy>().isSelected = true;
+                }
             }
             if (currentWeapon == WeaponType.NB)
             {
-                for (int i = 0; i <= Mathf.Clamp(targetedEnemies.Length, 0, 5) - 1; ++i)
-                {
-                    targetedEnemies[i].collider.gameObject.GetComponent<Enemy>().isSelected = true;
-                }
+                if (targetedEnemies != null || targetedEnemies.Length != 0)
+                {   
+                    for (int i = 0; i <= Mathf.Clamp(targetedEnemies.Length, 0, 5) - 1; ++i)
+                    {
+                        targetedEnemies[i].collider.gameObject.GetComponent<Enemy>().isSelected = true;
+                    }
+                } 
             }
         }       
         private void TurnOffTargeting()
         {
-            if (targetedEnemies == null || targetedEnemies.Length == 0)
+            foreach (var e in targetedEnemies)
             {
-                foreach (var e in targetedEnemies)
-                {
-                    e.collider.gameObject.GetComponent<Enemy>().isSelected = false;
-                }
-            } 
+                e.collider.gameObject.GetComponent<Enemy>().isSelected = false;
+            }
+            
         }
 
         // Firing Methods
@@ -174,7 +181,7 @@ namespace ThroughtTheGalaxy.Mechanics
            currentWeapon = (WeaponType)(Enum.GetValues(typeof(WeaponType)).GetValue(i));
            if (currentWeapon == WeaponType.MG)
            {
-               audioSource.PlayOneShot(MG_WeaponStats.onLoadWeaponSound);
+                audioSource.PlayOneShot(MG_WeaponStats.onLoadWeaponSound);
            } 
            if (currentWeapon == WeaponType.MSL)
            {
@@ -183,6 +190,7 @@ namespace ThroughtTheGalaxy.Mechanics
            if (currentWeapon == WeaponType.NB)
            {
                audioSource.PlayOneShot(NB_WeaponStats.onLoadWeaponSound);
+               
            } 
         }
         
