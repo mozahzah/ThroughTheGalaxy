@@ -9,90 +9,77 @@ namespace ThroughtTheGalaxy.Mechanics
     //[ExecuteInEditMode]
     public class Gun : MonoBehaviour
     {
-        public enum WeaponType {MG, MSL, NBL}
-        public enum AmmoType {bullets, missile, NanoBots}
-        public AudioClip[] audioClips;
-        public bool hasOpenedMGFire {get; set;}
-
-
+        // Core Weapon Settings
+        public enum WeaponType {MG, MSL, NB}
         public WeaponType currentWeapon;
-
         [System.Serializable]
         public struct WeaponStats
         {
-            public AmmoType ammoType;
             public int ammoAmount;
-            public float fireRate;
             public float damage;
-            public AudioClip weaponSound;
+            public AudioClip onLoadWeaponSound;
         }
 
-        
-        [Header("General Settings")] 
-        [SerializeField] MissileProjectile MSL_missileProjectile;
+        // Core Weapon Instances
+        [Header("Weaponery")] 
+        [SerializeField] WeaponStats MG_WeaponStats;
+        [SerializeField] WeaponStats MSL_WeaponStats;
+        [SerializeField] WeaponStats NB_WeaponStats;
+
+        // PreFab Settings
+        [Header("External GameObject Settings")] 
         [SerializeField] ParticleSystem MG_BulletParticleSystem;
-        [SerializeField] NanoBots NB_nanoBots;
+        [SerializeField] MissileProjectile MSL_MissileProjectile;
+        [SerializeField] NanoBots NB_NanoBots;
         [SerializeField] bool isFireOpen;
 
-
-        // Audio
+        // Audio Params
         AudioSource audioSource;
-        float cachedTime; 
 
-
-        [Header("Weaponery")] 
-        [SerializeField] WeaponStats activeWeapon;
-        
+        // RayCasting Params
         RaycastHit[] targetedEnemies;
-        RaycastHit[] nearestEnemies;
-        RaycastHit hit;
 
-        // Start is called before the first frame update
+        // MG Params
+        [Header("Specific to MG Weapon")]
+        [SerializeField] AudioClip MG_ShotSound;
+        public bool hasOpenedMGFire {get; set;}
+        float cachedTime;
+
         void Start()
         {
             targetedEnemies = new RaycastHit[5];
             audioSource = GetComponent<AudioSource>();
             MG_BulletParticleSystem = GetComponent<ParticleSystem>();
-
+            SetMGWeaponStats();
         }
 
-        // Update is called once per frame
         void Update()
         {
-            UpdateWeaponery();
-            //RayCastForTracking();
-            
-           
-               transform.rotation = Quaternion.LookRotation(Camera.main.ViewportToWorldPoint(new Vector3(0.5f,0.5f,0f)) + 
-               Camera.main.transform.forward * 25 -
-                transform.position);
-                Debug.DrawLine(transform.position, 
-                Camera.main.ViewportToWorldPoint(new Vector3(0.5f,0.5f,0f)) + Camera.main.transform.forward * 25, Color.red);
+            CrossairAim();
+            SetWeaponRayCast();
+            ProcessMGFire();
+        }
 
-            
-            
-
-            if (hasOpenedMGFire)
+        // Aiming and Targeting
+        private void CrossairAim()
+        {
+            transform.rotation = Quaternion.LookRotation(Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)) +
+                           Camera.main.transform.forward * 25 -
+                            transform.position);
+            Debug.DrawLine(transform.position,
+            Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)) + Camera.main.transform.forward * 25, Color.red);
+        }
+        private void SetWeaponRayCast()
+        {
+            if (currentWeapon == WeaponType.MG)
             {
-                if (isFireOpen == false)
-                {
-                    OpenMGFire();
-                    cachedTime = Time.timeSinceLevelLoad;
-                }
-
-                if (Time.timeSinceLevelLoad - cachedTime > 0.1)
-                {
-                    GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip);
-                    cachedTime = Time.timeSinceLevelLoad;
-                }
-
+                TurnOffTargeting();
             }
             else
             {
-                CloseMGFire();
+                RayCastForTracking();
             }
         }
-
         private void RayCastForTracking()
         {
             RaycastHit[] hits = Physics.SphereCastAll(transform.position, 50, transform.TransformDirection(Vector3.forward), Mathf.Infinity);
@@ -100,76 +87,48 @@ namespace ThroughtTheGalaxy.Mechanics
 
             for (int i = 0; i < targetedEnemies.Length - 1; i++)
             {
-                for (int j = i+ 1; j < targetedEnemies.Length; j++)
+                for (int j = i + 1; j < targetedEnemies.Length; j++)
                 {
-                    if (Vector3.Distance(targetedEnemies[i].collider.transform.position, 
-                        Camera.main.ViewportToWorldPoint(new Vector3(0.5f,0.5f,0f)) + 
-                        Camera.main.transform.forward * Vector3.Distance(targetedEnemies[i].collider.transform.position,Camera.main.ViewportToWorldPoint(new Vector3(0.5f,0.5f,0f)))) > 
-                        
-                        Vector3.Distance(targetedEnemies[j].collider.transform.position, 
-                        Camera.main.ViewportToWorldPoint(new Vector3(0.5f,0.5f,0f)) + 
-                        Camera.main.transform.forward * Vector3.Distance(targetedEnemies[i].collider.transform.position,Camera.main.ViewportToWorldPoint(new Vector3(0.5f,0.5f,0f)))))
-                        {
-                            var temp = targetedEnemies[i];
-                            targetedEnemies[i] = targetedEnemies[j];
-                            targetedEnemies[j] = temp;
-                        }
+                    if (Vector3.Distance(targetedEnemies[i].collider.transform.position,
+                        Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)) +
+                        Camera.main.transform.forward * Vector3.Distance(targetedEnemies[i].collider.transform.position, Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)))) >
+
+                        Vector3.Distance(targetedEnemies[j].collider.transform.position,
+                        Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)) +
+                        Camera.main.transform.forward * Vector3.Distance(targetedEnemies[i].collider.transform.position, Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)))))
+                    {
+                        var temp = targetedEnemies[i];
+                        targetedEnemies[i] = targetedEnemies[j];
+                        targetedEnemies[j] = temp;
+                    }
                 }
             }
 
-            foreach (var e in targetedEnemies)
-            {
-                e.collider.gameObject.GetComponent<Enemy>().isSelected = false;
-            }
+            TurnOffTargeting();
 
+            // Weapon Specific Targetting Methods
             if (currentWeapon == WeaponType.MSL)
             {
                 targetedEnemies[0].collider.gameObject.GetComponent<Enemy>().isSelected = true;
-            } 
-
-            if (currentWeapon == WeaponType.NBL)
+            }
+            if (currentWeapon == WeaponType.NB)
             {
-                for (int i = 0; i <= Mathf.Clamp(targetedEnemies.Length,0,5) - 1; ++i)
+                for (int i = 0; i <= Mathf.Clamp(targetedEnemies.Length, 0, 5) - 1; ++i)
                 {
                     targetedEnemies[i].collider.gameObject.GetComponent<Enemy>().isSelected = true;
                 }
-            }       
-        }
-
-        private void UpdateWeaponery()
+            }
+        }       
+        private void TurnOffTargeting()
         {
-            if (currentWeapon == WeaponType.MG)
+            if (targetedEnemies == null || targetedEnemies.Length == 0)
             {
                 foreach (var e in targetedEnemies)
-            {
-                e.collider.gameObject.GetComponent<Enemy>().isSelected = false;
-            }
-                activeWeapon.ammoType = AmmoType.bullets;
-                activeWeapon.ammoAmount = 100;
-                activeWeapon.damage = 5;
-                activeWeapon.fireRate = 20;
-                //activeWeapon.weaponSound = 
-            }
-            if (currentWeapon == WeaponType.MSL)
-            {
-                RayCastForTracking();
-                activeWeapon.ammoType = AmmoType.missile;
-                activeWeapon.ammoAmount = 10;
-                activeWeapon.damage = 100;
-                activeWeapon.fireRate = 2;
-                //activeWeapon.weaponSound = 
-            }
-            if (currentWeapon == WeaponType.NBL)
-            {
-                RayCastForTracking();
-                activeWeapon.ammoType = AmmoType.NanoBots;
-                activeWeapon.ammoAmount = 5;
-                activeWeapon.damage = 50;
-                activeWeapon.fireRate = 5;
-                //activeWeapon.weaponSound = 
-            }
+                {
+                    e.collider.gameObject.GetComponent<Enemy>().isSelected = false;
+                }
+            } 
         }
-
 
         // Firing Methods
         void OpenMGFire()
@@ -177,48 +136,88 @@ namespace ThroughtTheGalaxy.Mechanics
             MG_BulletParticleSystem.Play();
             isFireOpen = true;
         }
-
         void CloseMGFire()
         {
             MG_BulletParticleSystem.Stop();
             isFireOpen = false;
         }
-
-        public void LaunchMissile()
-        {
-            
+        public void ReleaseMissile()
+        { 
             if (targetedEnemies.Length > 0)
             {
-                MissileProjectile currentMissile = Instantiate(MSL_missileProjectile, transform.position, 
+                MissileProjectile currentMissile = Instantiate(MSL_MissileProjectile, transform.position, 
                 transform.rotation);
+
+                currentMissile.ammount = MSL_WeaponStats.ammoAmount;
+                currentMissile.damage = MSL_WeaponStats.damage;
+
                 currentMissile.ActivateMissile(targetedEnemies[0].collider.gameObject);
             }
-            
-            // Launch Missile
         }
-
         public void ReleaseNanoBots()
         {
             for (int i = 0; i <= Mathf.Clamp(targetedEnemies.Length,0,5) - 1; ++i)
             {
-                NanoBots currentNanoBot = Instantiate(NB_nanoBots, transform.position, 
+                NanoBots currentNanoBot = Instantiate(NB_NanoBots, transform.position, 
                 transform.rotation);
+
+                currentNanoBot.ammount = NB_WeaponStats.ammoAmount;
+                currentNanoBot.damage = NB_WeaponStats.damage;
+
                 currentNanoBot.ActivateNanoBot(targetedEnemies[i].collider.gameObject);
             }
-            
         }
 
+        // Weapon Management
+        public void SwitchWeapon(int i)
+        {
+           currentWeapon = (WeaponType)(Enum.GetValues(typeof(WeaponType)).GetValue(i));
+           if (currentWeapon == WeaponType.MG)
+           {
+               audioSource.PlayOneShot(MG_WeaponStats.onLoadWeaponSound);
+           } 
+           if (currentWeapon == WeaponType.MSL)
+           {
+               audioSource.PlayOneShot(MSL_WeaponStats.onLoadWeaponSound);
+           } 
+           if (currentWeapon == WeaponType.NB)
+           {
+               audioSource.PlayOneShot(NB_WeaponStats.onLoadWeaponSound);
+           } 
+        }
+        
+        // For Machine Gun
+        private void SetMGWeaponStats()
+        {
+            MG_WeaponStats.ammoAmount = 100;
+            MG_WeaponStats.damage = 20;
+        }
+        private void ProcessMGFire()
+        {
+            if (hasOpenedMGFire)
+            {
+                if (isFireOpen == false)
+                {
+                    OpenMGFire();
+                    cachedTime = Time.timeSinceLevelLoad;
+                }
+                if (Time.timeSinceLevelLoad - cachedTime > 0.2)
+                {
+                    GetComponent<AudioSource>().PlayOneShot(MG_ShotSound);
+                    cachedTime = Time.timeSinceLevelLoad;
+                }
+            }
+            else
+            {
+                CloseMGFire();
+            }
+        }
         void OnParticleCollision(GameObject other) 
         {
             if(other.GetComponent<Enemy>())
             {
-                other.GetComponent<Enemy>().health -= 10;
+                other.GetComponent<Enemy>().ProcessDamage(MG_WeaponStats.damage);
             }
-        }
-
-        public void SwitchWeapon(int i)
-        {
-           currentWeapon = (WeaponType)(Enum.GetValues(typeof(WeaponType)).GetValue(i)); 
         }
     }
 }

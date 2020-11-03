@@ -8,26 +8,34 @@ namespace ThroughtTheGalaxy.Mechanics
     public class NanoBots : MonoBehaviour
     {
         // Utility Params
-        bool isNanoLaunched;
         GameObject targetedEnemy;
+        Enemy currentEnemy;
+
         float floatingTime = 2;
         float initialTime;
         float initialTimeForDestruction;
-        Enemy currentEnemy;
+
         bool destructionActivated;
+        bool isNanoLaunched;
+
+        // From Gun.cs
+        public float damage{get;set;}
+        public int ammount{get;set;}
 
         // Visual Params
-        [SerializeField] ParticleSystem _particleSystem;
         Light myLight;
         bool hasFxPlayed = false;
         
         // Audio Params
-        
+        AudioSource audioSource;
+        [SerializeField] AudioClip[] audioClips;
         
         void Start()
         {
             initialTime = Time.timeSinceLevelLoad;
             myLight = GetComponent<Light>();
+            audioSource = GetComponent<AudioSource>();
+            audioSource.PlayOneShot(audioClips[0]);
         }
 
         void Update()
@@ -44,12 +52,11 @@ namespace ThroughtTheGalaxy.Mechanics
                 GetComponent<Rigidbody>().velocity = Vector3.zero;
                 if (Time.timeSinceLevelLoad - initialTimeForDestruction > 2)
                 {
-                    currentEnemy.health = 0;
+                    currentEnemy.ProcessDamage(damage);
                     Destroy(gameObject);
                 }
             }
         }
-
 
         // Methods
         public void ActivateNanoBot(GameObject enemy)
@@ -68,6 +75,7 @@ namespace ThroughtTheGalaxy.Mechanics
                 if (!hasFxPlayed)
                 {
                     GetComponent<Rigidbody>().velocity = Vector3.zero;
+                    audioSource.PlayOneShot(audioClips[1], 0.5f);
                     hasFxPlayed = true;
                 }
                 else 
@@ -84,14 +92,7 @@ namespace ThroughtTheGalaxy.Mechanics
             {
                 currentEnemy = other.gameObject.GetComponent<Enemy>();
                 initialTimeForDestruction = Time.timeSinceLevelLoad;
-                if (_particleSystem != null)
-                {
-                    _particleSystem.Play();
-                }
-                else
-                {
-                    destructionActivated = true;
-                }
+                destructionActivated = true;
             }
             
         }

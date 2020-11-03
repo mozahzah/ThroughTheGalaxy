@@ -27,10 +27,13 @@ namespace ThroughtTheGalaxy.Controller{
 
         int i = 0;
 
+        private void Start() 
+        {
+            gun.SwitchWeapon(i);
+        }
 
         void Update()
         {
-            
             //VerticalMouvement(); 
             HorizontalMouvement();
             ProcessRotation();
@@ -40,14 +43,17 @@ namespace ThroughtTheGalaxy.Controller{
             
             switch (caseSwitch)
             {
+                case Gun.WeaponType.MG:
+                gun.hasOpenedMGFire = Shooting();
+                break;
                 case Gun.WeaponType.MSL:
                 LaunchMissile();
                 break;
-                case Gun.WeaponType.NBL:
+                case Gun.WeaponType.NB:
                 ReleaseNanoBots();
                 break;
                 default:
-                gun.hasOpenedMGFire = Shooting();
+                gun.hasOpenedMGFire = false;
                 break;
             }   
   
@@ -77,7 +83,7 @@ namespace ThroughtTheGalaxy.Controller{
 
         private bool Shooting()
         {
-            if (CrossPlatformInputManager.GetAxis("Fire1") == 1 && gun.currentWeapon == Gun.WeaponType.MG)
+            if (CrossPlatformInputManager.GetAxis("Fire1") == 1)
             {
                 return true;
             }
@@ -105,7 +111,7 @@ namespace ThroughtTheGalaxy.Controller{
         {
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                gun.LaunchMissile();
+                gun.ReleaseMissile();
             }
         }
 

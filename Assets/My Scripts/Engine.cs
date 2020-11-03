@@ -9,8 +9,6 @@ namespace ThroughtTheGalaxy.Controller{
         [Header("General")]
         [SerializeField] float sensitivity = 1f;
 
-       
-
         private void Start() 
         {
             Cursor.visible = false;

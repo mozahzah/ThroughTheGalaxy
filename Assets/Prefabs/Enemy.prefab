@@ -59,9 +59,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35e7f660592cd6b40b10406462c057bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosion: {fileID: 1000011128802252, guid: 1ba090083e919684cb4074915a7efd84, type: 3}
   isSelected: 0
   health: 100
+  explosionVFX: {fileID: 1000011128802252, guid: 1ba090083e919684cb4074915a7efd84,
+    type: 3}
 --- !u!114 &7385920411746102309
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -8,21 +8,28 @@ namespace ThroughtTheGalaxy.Mechanics
 
     public class Enemy : MonoBehaviour
     {
-        [SerializeField] GameObject explosion;
 
+
+        // Utility Params
         public bool isSelected;
         public float health = 100;
-        // Start is called before the first frame update
+
+        // Visual Params
+        [SerializeField] GameObject explosionVFX;
+
+        // Audio Params
+        /* Managed By the VSX Explosion*/
+
         void Start()
         {
             
         }
 
-        // Update is called once per frame
         void Update()
         {
             
-            if (isSelected){
+            if (isSelected)
+            {
                 GetComponent<Outline>().enabled = true;
             }
             else
@@ -30,12 +37,16 @@ namespace ThroughtTheGalaxy.Mechanics
                 GetComponent<Outline>().enabled = false;
             }
 
-
             if (health <= 0)
             {
-                Instantiate(explosion, transform.position, transform.rotation);
+                Instantiate(explosionVFX, transform.position, transform.rotation);
                 Destroy(gameObject);
             }
+        }
+
+        public void ProcessDamage(float damage)
+        {
+            health -= damage;
         }
     }
 }
