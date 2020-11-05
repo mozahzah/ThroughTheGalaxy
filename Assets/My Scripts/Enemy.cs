@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace ThroughtTheGalaxy.Mechanics
+namespace ThroughtTheGalaxy.Characters
 {
-
     public class Enemy : MonoBehaviour
     {
-
-
         // Utility Params
         public bool isSelected;
         public float health = 100;

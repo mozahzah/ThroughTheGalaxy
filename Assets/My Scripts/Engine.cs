@@ -2,12 +2,22 @@
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
-namespace ThroughtTheGalaxy.Controller{
+namespace ThroughtTheGalaxy.Controller
+{
+   
     public class Engine : MonoBehaviour
     {
-        [SerializeField] GameObject target;
+        [SerializeField] GameObject ship;
         [Header("General")]
         [SerializeField] float sensitivity = 1f;
+
+        [Header("Throw Control")]
+        [SerializeField] float controlRollFactor = 0f;
+        float xThrow, yThrow, zThrow;
+
+        [Tooltip("In ms")] [SerializeField] float xSpeed = 5f;
+        [Tooltip("In ms")] [SerializeField] float zSpeed = 5f;
+
 
         private void Start() 
         {
@@ -16,16 +26,34 @@ namespace ThroughtTheGalaxy.Controller{
         }
         void Update()
         {
-            transform.position += target.transform.forward * Time.deltaTime * CrossPlatformInputManager.GetAxis("Vertical") *4;
             ProcessLook();
+            BasicMouvement();
+            ProcessRotation();
         }
 
         private void ProcessLook()
         {
-            float pitch = transform.localEulerAngles.x + CrossPlatformInputManager.GetAxis("Mouse Y") * -sensitivity * Time.deltaTime;
-            float yaw  =  transform.localEulerAngles.y + CrossPlatformInputManager.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
-            float roll =   transform.localEulerAngles.z;
-            transform.localRotation = Quaternion.Euler(pitch, yaw, roll);
+            float pitch = transform.localRotation.eulerAngles.x + CrossPlatformInputManager.GetAxis("Mouse Y") * -sensitivity * Time.deltaTime;
+            float yaw  = transform.localRotation.eulerAngles.y + CrossPlatformInputManager.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
+            transform.localRotation = Quaternion.Euler(pitch, yaw, 0);
+        }
+
+        private void ProcessRotation()
+        {
+            float roll= xThrow * controlRollFactor;
+            ship.transform.localRotation = Quaternion.Euler(ship.transform.localRotation.eulerAngles.x, 
+            ship.transform.localRotation.eulerAngles.y, roll);
+        }
+
+        private void BasicMouvement()
+        {
+            xThrow = CrossPlatformInputManager.GetAxis("Horizontal");
+            float xOffset = xThrow * xSpeed * Time.deltaTime;
+            transform.Translate(Vector3.right * xOffset);
+
+            zThrow = CrossPlatformInputManager.GetAxis("Vertical");
+            float zOffset = zThrow * zSpeed * Time.deltaTime;
+            transform.Translate(Vector3.forward * zOffset);
         }
     }
 }

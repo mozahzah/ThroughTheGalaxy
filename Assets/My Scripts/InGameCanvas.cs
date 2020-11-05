@@ -9,9 +9,9 @@ namespace ThroughtTheGalaxy.UI
     //[ExecuteInEditMode]
     public class InGameCanvas : MonoBehaviour
     {
-        [SerializeField] Transform MG_Text;
-        [SerializeField] Transform MSL_Text;
-        [SerializeField] Transform NB_Text;
+        [SerializeField] Transform MG_Icon;
+        [SerializeField] Transform MSL_Icon;
+        [SerializeField] Transform NB_Icon;
 
         public int selectedWeapon;
         Color highlightColor;
@@ -28,37 +28,37 @@ namespace ThroughtTheGalaxy.UI
         {   
             if (selectedWeapon == 0)
             {
-                MG_Text.GetChild(0).GetComponent<Image>().enabled = true;
-                MG_Text.gameObject.GetComponent<Text>().color = highlightColor;
+                MG_Icon.GetChild(0).GetComponent<Image>().enabled = true;
+                MG_Icon.gameObject.GetComponent<RawImage>().color = highlightColor;
 
-                MSL_Text.GetChild(0).GetComponent<Image>().enabled = false;
-                MSL_Text.gameObject.GetComponent<Text>().color = nonHighlightColor;
+                MSL_Icon.GetChild(0).GetComponent<Image>().enabled = false;
+                MSL_Icon.gameObject.GetComponent<RawImage>().color = nonHighlightColor;
 
-                NB_Text.GetChild(0).GetComponent<Image>().enabled = false;
-                NB_Text.gameObject.GetComponent<Text>().color = nonHighlightColor;
+                NB_Icon.GetChild(0).GetComponent<Image>().enabled = false;
+                NB_Icon.gameObject.GetComponent<RawImage>().color = nonHighlightColor;
             }
             if (selectedWeapon == 1)
             {
-                MG_Text.GetChild(0).GetComponent<Image>().enabled = false;
-                MG_Text.gameObject.GetComponent<Text>().color = nonHighlightColor;
+                MG_Icon.GetChild(0).GetComponent<Image>().enabled = false;
+                MG_Icon.gameObject.GetComponent<RawImage>().color = nonHighlightColor;
 
-                MSL_Text.GetChild(0).GetComponent<Image>().enabled = true;
-                MSL_Text.gameObject.GetComponent<Text>().color = highlightColor;
+                MSL_Icon.GetChild(0).GetComponent<Image>().enabled = true;
+                MSL_Icon.gameObject.GetComponent<RawImage>().color = highlightColor;
 
-                NB_Text.GetChild(0).GetComponent<Image>().enabled = false;
-                NB_Text.gameObject.GetComponent<Text>().color = nonHighlightColor;
+                NB_Icon.GetChild(0).GetComponent<Image>().enabled = false;
+                NB_Icon.gameObject.GetComponent<RawImage>().color = nonHighlightColor;
             }
 
             if (selectedWeapon == 2)
             {
-                MG_Text.GetChild(0).GetComponent<Image>().enabled = false;
-                MG_Text.gameObject.GetComponent<Text>().color = nonHighlightColor;
+                MG_Icon.GetChild(0).GetComponent<Image>().enabled = false;
+                MG_Icon.gameObject.GetComponent<RawImage>().color = nonHighlightColor;
 
-                MSL_Text.GetChild(0).GetComponent<Image>().enabled = false;
-                MSL_Text.gameObject.GetComponent<Text>().color = nonHighlightColor;
+                MSL_Icon.GetChild(0).GetComponent<Image>().enabled = false;
+                MSL_Icon.gameObject.GetComponent<RawImage>().color = nonHighlightColor;
 
-                NB_Text.GetChild(0).GetComponent<Image>().enabled = true;
-                NB_Text.gameObject.GetComponent<Text>().color = highlightColor;
+                NB_Icon.GetChild(0).GetComponent<Image>().enabled = true;
+                NB_Icon.gameObject.GetComponent<RawImage>().color = highlightColor;
             } 
         }
     }

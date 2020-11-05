@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
-
+using ThroughtTheGalaxy.Characters;
 
 namespace ThroughtTheGalaxy.Mechanics
 {
@@ -81,7 +81,6 @@ namespace ThroughtTheGalaxy.Mechanics
                 TurnOffTargeting();
             }
         }
-
         private void RayCastForTracking()
         {
             RaycastHit[] hits = Physics.SphereCastAll(transform.position, 50, transform.TransformDirection(Vector3.forward), Mathf.Infinity);

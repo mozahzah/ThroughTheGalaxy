@@ -2,28 +2,26 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityStandardAssets.CrossPlatformInput;
 using ThroughtTheGalaxy.Mechanics;
+using ThroughtTheGalaxy.Characters;
 using ThroughtTheGalaxy.UI;
 
 
-namespace ThroughtTheGalaxy.Controller{
-
+namespace ThroughtTheGalaxy.Controller
+{
     public class ShipController : MonoBehaviour
     {
         [Header("General")]
-        [Tooltip("In ms")] [SerializeField] float xSpeed = 15f;
-        [Tooltip("In ms")] [SerializeField] float ySpeed = 15f;
-        [SerializeField] Canvas inGameCanvas;
-
-        [Header("Throw Control")]
-        [SerializeField] float controlPitchFactor = -25f;
-        [SerializeField] float controlRollFactor = -25f;
-        float yThrow, xThrow;
+        [SerializeField] GameObject[] canvas;
 
         [Header("Guns")]
         [SerializeField] Gun gun;
         Gun.WeaponType caseSwitch = 0;
+
+        [Header("Gadgets")]
+        [SerializeField] DroneBot droneBot;
 
         int i = 0;
 
@@ -31,17 +29,15 @@ namespace ThroughtTheGalaxy.Controller{
         {
             gun.SwitchWeapon(i);
             UpdateCanvas();
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         void Update()
         {
-            HorizontalMouvement();
-            ProcessRotation();
             SwitchWeapon();
-            
-
-            caseSwitch = gun.currentWeapon;
-            
+            ReleaseDroneBot();
+            caseSwitch = gun.currentWeapon;  
             switch (caseSwitch)
             {
                 case Gun.WeaponType.MG:
@@ -57,24 +53,13 @@ namespace ThroughtTheGalaxy.Controller{
                 gun.hasOpenedMGFire = false;
                 break;
             }   
+
+            // Reloading Scene
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                //SceneManager.LoadScene(0);
+            }
   
-        }
-
-        // Mouvement
-        private void ProcessRotation()
-        {
-            float pitch = yThrow * controlPitchFactor;
-            float yaw =  transform.localEulerAngles.y;
-            float roll= Mathf.Lerp(xThrow * controlRollFactor, 0, 0.1f * Time.deltaTime);
-            transform.localRotation = Quaternion.Euler(pitch, yaw, roll);
-        }
-
-        private void HorizontalMouvement()
-        {
-            xThrow = CrossPlatformInputManager.GetAxis("Horizontal");
-            float xOffset = xThrow * xSpeed * Time.deltaTime;
-            float rawNewXpos = transform.localPosition.x + xOffset;
-            transform.localPosition = new Vector3(rawNewXpos, transform.localPosition.y, transform.localPosition.z);
         }
 
         // Gun Activation
@@ -121,19 +106,42 @@ namespace ThroughtTheGalaxy.Controller{
            }
         }
 
-        private void UpdateCanvas()
+
+        // Gadget Activation
+        private void ReleaseDroneBot()
         {
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                var currentDroneBot = Instantiate(droneBot, transform.position, transform.rotation);
+                currentDroneBot.GetComponentInChildren<DroneController>().canvas = canvas;
+                transform.parent.GetComponent<Engine>().enabled = false;
+                GetComponent<ShipController>().enabled = false;
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        private void UpdateCanvas()
+        {   
+            canvas[0].SetActive(true);
+            canvas[1].SetActive(false);
+            
+
+
+
             caseSwitch = gun.currentWeapon;
             switch (caseSwitch)
             {
                 case Gun.WeaponType.MG:
-                inGameCanvas.GetComponent<InGameCanvas>().selectedWeapon = 0;
+                canvas[0].GetComponent<InGameCanvas>().selectedWeapon = 0;
                 break;
                 case Gun.WeaponType.MSL:
-                inGameCanvas.GetComponent<InGameCanvas>().selectedWeapon = 1;
+                canvas[0].GetComponent<InGameCanvas>().selectedWeapon = 1;
                 break;
                 case Gun.WeaponType.NB:
-                inGameCanvas.GetComponent<InGameCanvas>().selectedWeapon = 2;
+                canvas[0].GetComponent<InGameCanvas>().selectedWeapon = 2;
                 break;
             }   
         }
