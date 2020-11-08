@@ -4,12 +4,12 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityStandardAssets.CrossPlatformInput;
-using ThroughtTheGalaxy.Mechanics;
-using ThroughtTheGalaxy.Characters;
-using ThroughtTheGalaxy.UI;
+using unciphering.Mechanics;
+using unciphering.Characters;
+using unciphering.UI;
 
 
-namespace ThroughtTheGalaxy.Controller
+namespace unciphering.Controller
 {
     public class ShipController : MonoBehaviour
     {
@@ -114,6 +114,8 @@ namespace ThroughtTheGalaxy.Controller
             {
                 var currentDroneBot = Instantiate(droneBot, transform.position, transform.rotation);
                 currentDroneBot.GetComponentInChildren<DroneController>().canvas = canvas;
+                currentDroneBot.GetComponentInChildren<DroneController>().MotherShip = this;
+                gun.enabled = false;
                 transform.parent.GetComponent<Engine>().enabled = false;
                 GetComponent<ShipController>().enabled = false;
             }

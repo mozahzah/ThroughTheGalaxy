@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using ThroughtTheGalaxy.Characters;
+using unciphering.Characters;
 
-namespace ThroughtTheGalaxy.Mechanics
+namespace unciphering.Mechanics
 {
     public class MissileProjectile : MonoBehaviour
     {

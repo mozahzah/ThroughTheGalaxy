@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace unciphering.UI{
 public class DroneCanvas : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -15,4 +16,5 @@ public class DroneCanvas : MonoBehaviour
     {
         
     }
+}
 }

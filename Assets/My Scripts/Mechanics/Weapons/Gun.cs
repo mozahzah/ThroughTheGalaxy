@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
-using ThroughtTheGalaxy.Characters;
+using unciphering.Characters;
 
-namespace ThroughtTheGalaxy.Mechanics
+namespace unciphering.Mechanics
 {
     //[ExecuteInEditMode]
     public class Gun : MonoBehaviour

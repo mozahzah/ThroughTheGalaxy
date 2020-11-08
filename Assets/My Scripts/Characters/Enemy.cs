@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-namespace ThroughtTheGalaxy.Characters
+namespace unciphering.Characters
 {
     public class Enemy : MonoBehaviour
     {
@@ -19,12 +18,22 @@ namespace ThroughtTheGalaxy.Characters
 
         void Start()
         {
-            
+            GetComponent<EnemyTag>().enabled = false;
         }
 
         void Update()
         {
-            
+            UpdateSelection();
+
+            if (health <= 0)
+            {
+                Instantiate(explosionVFX, transform.position, transform.rotation);
+                Destroy(gameObject);
+            }
+        }
+
+        private void UpdateSelection()
+        {
             if (isSelected)
             {
                 GetComponent<Outline>().enabled = true;
@@ -33,12 +42,11 @@ namespace ThroughtTheGalaxy.Characters
             {
                 GetComponent<Outline>().enabled = false;
             }
+        }
 
-            if (health <= 0)
-            {
-                Instantiate(explosionVFX, transform.position, transform.rotation);
-                Destroy(gameObject);
-            }
+        public void TagEnemy()
+        {
+            GetComponent<EnemyTag>().enabled = true;
         }
 
         public void ProcessDamage(float damage)

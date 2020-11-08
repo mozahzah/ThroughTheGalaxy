@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-namespace ThroughtTheGalaxy.UI
+namespace unciphering.UI
 {
     //[ExecuteInEditMode]
     public class InGameCanvas : MonoBehaviour

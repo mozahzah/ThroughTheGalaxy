@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 7613374809611738943}
   - component: {fileID: 7137437759134263056}
   - component: {fileID: 1143014976}
-  - component: {fileID: 274258155248361531}
+  - component: {fileID: 7628359766881385844}
   m_Layer: 0
   m_Name: DroneBotPlayer
   m_TagString: SecondaryCamera
@@ -164,7 +164,7 @@ MonoBehaviour:
   controlRollFactor: 0
   xSpeed: 5
   zSpeed: 5
---- !u!114 &274258155248361531
+--- !u!114 &7628359766881385844
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -176,8 +176,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47ad47ac9d2093e47b0c854f369575f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainCamera: {fileID: 0}
-  DroneCamera: {fileID: 7613374808559839414}
 --- !u!1001 &1453585918477537915
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -233,6 +231,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4507447226062752221, guid: a19af03b7c64771489f010af565cc649,
+        type: 3}
+      propertyPath: droneBot
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4507447226062752221, guid: a19af03b7c64771489f010af565cc649,
+        type: 3}
+      propertyPath: DroneCamera
+      value: 
+      objectReference: {fileID: 7613374808559839414}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a19af03b7c64771489f010af565cc649, type: 3}
 --- !u!4 &1451061764067992521 stripped

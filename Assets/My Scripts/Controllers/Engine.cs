@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
-namespace ThroughtTheGalaxy.Controller
+namespace unciphering.Controller
 {
    
     public class Engine : MonoBehaviour

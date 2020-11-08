@@ -307,6 +307,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 369781651}
     m_Modifications:
+    - target: {fileID: 1731427295076657595, guid: 1464b444e7549d5439056e5e28cbf78e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3300687125962161311, guid: 1464b444e7549d5439056e5e28cbf78e,
         type: 3}
       propertyPath: isSelected
@@ -1662,7 +1667,7 @@ PrefabInstance:
         type: 3}
       propertyPath: droneBot
       value: 
-      objectReference: {fileID: 274258155248361531, guid: 23903db5589754946ac7044b7d6313ad,
+      objectReference: {fileID: 7628359766881385844, guid: 23903db5589754946ac7044b7d6313ad,
         type: 3}
     - target: {fileID: 6876319335782741854, guid: cac7abc7956a4f44fb4a3a9bea4b9125,
         type: 3}
