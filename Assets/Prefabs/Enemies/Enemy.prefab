@@ -57,7 +57,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4571485744460777663}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35e7f660592cd6b40b10406462c057bb, type: 3}
+  m_Script: {fileID: 11500000, guid: e18f9c180c616de4ca5ce9ae30bb16af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isSelected: 0
@@ -91,11 +91,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4571485744460777663}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7842632080ed71e4d90043afce90a644, type: 3}
+  m_Script: {fileID: 11500000, guid: 491483ff8ae9c3044b9b8cfa45dd9e97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   outlineMode: 0
-  outlineColor: {r: 0.20784314, g: 0.05490196, b: 0.047058824, a: 1}
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
   outlineWidth: 2
   precomputeOutline: 0
   bakeKeys: []

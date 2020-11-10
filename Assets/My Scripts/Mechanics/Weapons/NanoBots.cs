@@ -14,6 +14,7 @@ namespace unciphering.Mechanics
         float floatingTime = 2;
         float initialTime;
         float initialTimeForDestruction;
+        float lifeTime;
 
         bool destructionActivated;
         bool isNanoLaunched;
@@ -33,6 +34,7 @@ namespace unciphering.Mechanics
         void Start()
         {
             initialTime = Time.timeSinceLevelLoad;
+            lifeTime = Time.timeSinceLevelLoad;
             myLight = GetComponent<Light>();
             audioSource = GetComponent<AudioSource>();
             audioSource.PlayOneShot(audioClips[0]);
@@ -56,6 +58,13 @@ namespace unciphering.Mechanics
                     Destroy(gameObject);
                 }
             }
+
+
+            if (Time.timeSinceLevelLoad - lifeTime > 10)
+            {
+                Destroy(gameObject);
+            }
+
         }
 
         // Methods
@@ -80,6 +89,7 @@ namespace unciphering.Mechanics
                 }
                 else 
                 {
+                    if (targetedEnemy == null) return;
                     transform.rotation = Quaternion.LookRotation(targetedEnemy.transform.position - transform.position);
                     GetComponent<Rigidbody>().AddForce(transform.forward * 500 * Time.deltaTime);
                 }

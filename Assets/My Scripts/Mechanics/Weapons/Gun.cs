@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using System.Linq;
 using unciphering.Characters;
 
 namespace unciphering.Mechanics
@@ -38,6 +39,7 @@ namespace unciphering.Mechanics
 
         // RayCasting Params
         RaycastHit[] targetedEnemies;
+        GameObject targetedEnemyCache;
 
         // MG Params
         [Header("Specific to MG Weapon")]
@@ -51,7 +53,6 @@ namespace unciphering.Mechanics
             audioSource = GetComponent<AudioSource>();
             MG_BulletParticleSystem = GetComponent<ParticleSystem>();
             SetMGWeaponStats();
-            RayCastForTracking();
         }
 
         void Update()
@@ -59,6 +60,7 @@ namespace unciphering.Mechanics
             CrossairAim();
             ProcessMGFire();
             SetWeaponRayCast();
+            Debug.Log(currentWeapon);
         }
 
         // Aiming and Targeting
@@ -72,18 +74,37 @@ namespace unciphering.Mechanics
         }
         private void SetWeaponRayCast()
         {
-            if (currentWeapon == WeaponType.MSL || currentWeapon == WeaponType.NB)
+            if (currentWeapon == WeaponType.MSL)
             {
-                RayCastForTracking();
+                RayCastForTracking(80);
+            }
+            else if (currentWeapon == WeaponType.NB)
+            {
+                RayCastForTracking(40);
             }
             else
             {
                 TurnOffTargeting();
             }
         }
-        private void RayCastForTracking()
+
+        // private void OnDrawGizmos() 
+        // {
+        //     Gizmos.color = Color.red;
+        //     if (currentWeapon == WeaponType.MSL)
+        //     {
+        //         Gizmos.DrawWireSphere(transform.position, 40*Mathf.Sin(Time.timeSinceLevelLoad*10));
+        //     }
+        //     if (currentWeapon == WeaponType.NB)
+        //     {
+        //        Gizmos.DrawWireSphere(transform.position, 20);
+        //     }
+        // }
+
+
+        private void RayCastForTracking(int radius)
         {
-            RaycastHit[] hits = Physics.SphereCastAll(transform.position, 50, transform.TransformDirection(Vector3.forward), Mathf.Infinity);
+            RaycastHit[] hits = Physics.SphereCastAll(transform.position, radius, transform.TransformDirection(Vector3.forward), radius);
             targetedEnemies = Array.FindAll(hits, e => e.collider.gameObject.GetComponent<Enemy>());
 
             // Array Sorting by Distance
@@ -106,7 +127,6 @@ namespace unciphering.Mechanics
                 }
             }
 
-
             TurnOffTargeting();
             // Weapon Specific Targetting Methods
             if (currentWeapon == WeaponType.MSL)
@@ -116,7 +136,7 @@ namespace unciphering.Mechanics
                     targetedEnemies[0].collider.gameObject.GetComponent<Enemy>().isSelected = true;
                 }
             }
-            if (currentWeapon == WeaponType.NB)
+            else if (currentWeapon == WeaponType.NB)
             {
                 if (targetedEnemies != null || targetedEnemies.Length != 0)
                 {   
@@ -126,14 +146,17 @@ namespace unciphering.Mechanics
                     }
                 } 
             }
+            if (Vector3.Distance(transform.position, targetedEnemies[0].transform.position) > radius - 1)
+            {
+                TurnOffTargeting();
+            }
         }       
         private void TurnOffTargeting()
         {
-            foreach (var e in targetedEnemies)
+            foreach (var targetedEnemy in targetedEnemies)
             {
-                e.collider.gameObject.GetComponent<Enemy>().isSelected = false;
+                targetedEnemy.collider.gameObject.GetComponent<Enemy>().isSelected = false;
             }
-            
         }
 
         // Firing Methods
@@ -156,8 +179,9 @@ namespace unciphering.Mechanics
 
                 currentMissile.ammount = MSL_WeaponStats.ammoAmount;
                 currentMissile.damage = MSL_WeaponStats.damage;
-
+                
                 currentMissile.ActivateMissile(targetedEnemies[0].collider.gameObject);
+                Array.Clear(targetedEnemies,0, targetedEnemies.Length);
             }
         }
         public void ReleaseNanoBots()
@@ -172,6 +196,7 @@ namespace unciphering.Mechanics
 
                 currentNanoBot.ActivateNanoBot(targetedEnemies[i].collider.gameObject);
             }
+            Array.Clear(targetedEnemies,0, targetedEnemies.Length);
         }
 
         // Weapon Management
@@ -188,8 +213,7 @@ namespace unciphering.Mechanics
            } 
            if (currentWeapon == WeaponType.NB)
            {
-               audioSource.PlayOneShot(NB_WeaponStats.onLoadWeaponSound);
-               
+               audioSource.PlayOneShot(NB_WeaponStats.onLoadWeaponSound);  
            } 
         }
         
@@ -201,11 +225,13 @@ namespace unciphering.Mechanics
         }
         private void ProcessMGFire()
         {
+            
             if (hasOpenedMGFire)
             {
                 if (isFireOpen == false)
                 {
                     OpenMGFire();
+                    GetComponent<AudioSource>().PlayOneShot(MG_ShotSound);
                     cachedTime = Time.timeSinceLevelLoad;
                 }
                 if (Time.timeSinceLevelLoad - cachedTime > 0.2)
@@ -223,6 +249,7 @@ namespace unciphering.Mechanics
         {
             if(other.GetComponent<Enemy>())
             {
+                targetedEnemies = targetedEnemies.Where(x => 0 != 0).ToArray();
                 other.GetComponent<Enemy>().ProcessDamage(MG_WeaponStats.damage);
             }
         }

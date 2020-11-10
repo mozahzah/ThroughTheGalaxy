@@ -93,14 +93,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 4457149587784295200}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0971d4ce987293e48869aa807d84f1e1, type: 3}
+  m_Script: {fileID: 11500000, guid: ce7f4ec92ba0f4e43ad2dcc753a5179c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xSpeed: 5
-  ySpeed: 5
-  controlPitchFactor: -5
-  controlRollFactor: -15
+  canvas:
+  - {fileID: 0}
+  - {fileID: 0}
   gun: {fileID: 5955588542531716179}
+  droneBot: {fileID: 7628359766881385844, guid: 23903db5589754946ac7044b7d6313ad,
+    type: 3}
 --- !u!65 &2766408955516949418
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -157,28 +158,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 5522668099317033785}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea9a4e701b6e872499eb57cae5c7cada, type: 3}
+  m_Script: {fileID: 11500000, guid: 8bbf79d47ec07cf4d8b2b53bec8c7357, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   currentWeapon: 0
-  MG_BulletParticleSystem: {fileID: 4401167493938317124}
+  MG_WeaponStats:
+    ammoAmount: 0
+    damage: 20
+    onLoadWeaponSound: {fileID: 8300000, guid: d96669d7fccf03941aa3b8c4edd45d9e, type: 3}
+  MSL_WeaponStats:
+    ammoAmount: 0
+    damage: 50
+    onLoadWeaponSound: {fileID: 8300000, guid: 850001b038d21ef43a602a4340ba9d07, type: 3}
+  NB_WeaponStats:
+    ammoAmount: 0
+    damage: 100
+    onLoadWeaponSound: {fileID: 8300000, guid: c530ebae456a3e64e913af4131fc544e, type: 3}
+  MG_BulletParticleSystem: {fileID: 0}
   MSL_MissileProjectile: {fileID: 3175973850506413055, guid: 6d213ad6d98a14f438d0861d31849ebb,
     type: 3}
   NB_NanoBots: {fileID: 2763659502996342301, guid: d3008d9e8e2f9f147b794708f6de74e3,
     type: 3}
   isFireOpen: 0
-  MG_WeaponStats:
-    ammoAmount: 0
-    damage: 0
-    onLoadWeaponSound: {fileID: 8300000, guid: 11af2cfc4ef6ed34c9fc5119b68301cc, type: 3}
-  MSL_WeaponStats:
-    ammoAmount: 0
-    damage: 100
-    onLoadWeaponSound: {fileID: 0}
-  NB_WeaponStats:
-    ammoAmount: 0
-    damage: 100
-    onLoadWeaponSound: {fileID: 8300000, guid: 75d19c7effa338d47b31ffacf55b8d5f, type: 3}
+  MG_ShotSound: {fileID: 8300000, guid: d4ffbd1e0a82ddc4fa6551f8203137de, type: 3}
 --- !u!198 &4401167493938317124
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -187,14 +189,14 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5522668099317033785}
   serializedVersion: 6
-  lengthInSec: 1
+  lengthInSec: 5
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 1
-  prewarm: 0
+  prewarm: 1
   playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -315,7 +317,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 20
+      scalar: 100
       minScalar: 5
       maxCurve:
         serializedVersion: 2

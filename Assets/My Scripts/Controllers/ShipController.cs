@@ -27,7 +27,6 @@ namespace unciphering.Controller
 
         private void Start() 
         {
-            gun.SwitchWeapon(i);
             UpdateCanvas();
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
@@ -93,7 +92,7 @@ namespace unciphering.Controller
            if (Input.GetKeyDown(KeyCode.Q))
            {
                int count = Enum.GetValues(typeof(Gun.WeaponType)).Length;
-               if (i == count - 1)
+               if (i >= count - 1)
                {
                    i = 0;
                }
@@ -101,6 +100,7 @@ namespace unciphering.Controller
                {
                     i ++;
                }
+                i = Mathf.Clamp(i,0,count);
                 gun.SwitchWeapon(i);
                 UpdateCanvas();
            }

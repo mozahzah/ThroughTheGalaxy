@@ -93,7 +93,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7613374808559839417}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81b7817a9a5dcee42a0cc3373a27cbc3, type: 3}
+  m_Script: {fileID: 11500000, guid: c3b215922e3b0f940b055f7cbfea5c46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &7613374809611738945
@@ -156,11 +156,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7613374809611738945}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 726c99ba11ec3ba499cf272c6fd28fde, type: 3}
+  m_Script: {fileID: 11500000, guid: aab5f0c0c435185498b60c59d5599818, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ship: {fileID: 7613374809611738945}
-  sensitivity: 25
+  ship: {fileID: 0}
+  sensitivity: 1
   controlRollFactor: 0
   xSpeed: 5
   zSpeed: 5
@@ -173,7 +173,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7613374809611738945}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47ad47ac9d2093e47b0c854f369575f4, type: 3}
+  m_Script: {fileID: 11500000, guid: ac9a6ad1232e7a449983f2eb296f78e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1453585918477537915

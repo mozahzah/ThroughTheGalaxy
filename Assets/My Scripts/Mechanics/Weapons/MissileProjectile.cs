@@ -13,6 +13,7 @@ namespace unciphering.Mechanics
 
         float floatingTime = 1.5f;
         float initialTime;
+        float lifeTime;
 
         // For Gun.cs
         public float damage{get;set;}
@@ -29,6 +30,7 @@ namespace unciphering.Mechanics
         void Start()
         {
             initialTime = Time.timeSinceLevelLoad;
+            lifeTime = Time.timeSinceLevelLoad;
             audioSource = GetComponent<AudioSource>();
             audioSource.PlayOneShot(audioClips[0]);
         }
@@ -40,6 +42,14 @@ namespace unciphering.Mechanics
             {
                 OnMissileLaunch();
             }
+
+            if (Time.timeSinceLevelLoad - lifeTime > 10)
+            {
+                Destroy(gameObject);
+            }
+
+
+
         }
 
         public void OnMissileLaunch()
@@ -54,15 +64,13 @@ namespace unciphering.Mechanics
                 {
                     _particleSystem.Play();
                     GetComponent<Rigidbody>().velocity = Vector3.zero;
+                    if (targetedEnemy == null) return; 
                     transform.rotation = Quaternion.LookRotation(targetedEnemy.transform.position - transform.position);
                     audioSource.PlayOneShot(audioClips[1]);
                     hasFxPlayed = true;
                 }
                 else 
                 {
-                    Debug.Log(targetedEnemy.name);
-                    
-                    //GetComponent<Rigidbody>().AddForce((targetedEnemy.transform.position - transform.position).normalized * 50 * Time.deltaTime);
                     GetComponent<Rigidbody>().AddForce(transform.forward * 5000 * Time.deltaTime);
                 }
                 
