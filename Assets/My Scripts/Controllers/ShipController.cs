@@ -23,6 +23,10 @@ namespace unciphering.Controller
         [Header("Gadgets")]
         [SerializeField] DroneBot droneBot;
 
+
+        float cachedTime1;
+        float cachedTime2;
+        float cachedTime3;
         int i = 0;
 
         private void Start() 
@@ -30,6 +34,10 @@ namespace unciphering.Controller
             UpdateCanvas();
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
+
+            cachedTime1 = Time.timeSinceLevelLoad;
+            cachedTime2 = Time.timeSinceLevelLoad;
+            cachedTime3 = Time.timeSinceLevelLoad;
         }
 
         void Update()
@@ -51,14 +59,7 @@ namespace unciphering.Controller
                 default:
                 gun.hasOpenedMGFire = false;
                 break;
-            }   
-
-            // Reloading Scene
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                //SceneManager.LoadScene(0);
             }
-  
         }
 
         // Gun Activation
@@ -73,17 +74,35 @@ namespace unciphering.Controller
 
         private void LaunchMissile()
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (Input.GetKeyDown(KeyCode.Mouse0) && Time.timeSinceLevelLoad - cachedTime2 > gun.MSL_WeaponStats.reloadTime)
             {
-                gun.ReleaseMissile();
+                if (gun.ReleaseMissile())
+                {   
+                    cachedTime2 = Time.timeSinceLevelLoad;
+                    canvas[0].GetComponent<InGameCanvas>().cachedTime2 = Time.timeSinceLevelLoad;
+                    canvas[0].GetComponent<InGameCanvas>().MSL_isReloading = true;
+                }
+            }
+            else
+            {
+                return;
             }
         }
 
         private void ReleaseNanoBots()
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (Input.GetKeyDown(KeyCode.Mouse0) && Time.timeSinceLevelLoad - cachedTime3 > gun.NB_WeaponStats.reloadTime)
             {
-                gun.ReleaseNanoBots();
+                if (gun.ReleaseNanoBots())
+                {
+                    cachedTime3 = Time.timeSinceLevelLoad;
+                    canvas[0].GetComponent<InGameCanvas>().cachedTime3 = Time.timeSinceLevelLoad;
+                    canvas[0].GetComponent<InGameCanvas>().NB_isReloading = true;
+                }
+            }
+            else
+            {
+                return;
             }
         }
 
@@ -130,7 +149,9 @@ namespace unciphering.Controller
             canvas[0].SetActive(true);
             canvas[1].SetActive(false);
             
-
+            canvas[0].GetComponent<InGameCanvas>().MG_reloadTime = gun.MG_WeaponStats.reloadTime;
+            canvas[0].GetComponent<InGameCanvas>().MSL_reloadTime = gun.MSL_WeaponStats.reloadTime;
+            canvas[0].GetComponent<InGameCanvas>().NB_reloadTime = gun.NB_WeaponStats.reloadTime;
 
 
             caseSwitch = gun.currentWeapon;
@@ -145,7 +166,12 @@ namespace unciphering.Controller
                 case Gun.WeaponType.NB:
                 canvas[0].GetComponent<InGameCanvas>().selectedWeapon = 2;
                 break;
-            }   
+            }
+        }
+
+        private void PlayReloadAnimation()
+        {
+           
         }
     }
 }

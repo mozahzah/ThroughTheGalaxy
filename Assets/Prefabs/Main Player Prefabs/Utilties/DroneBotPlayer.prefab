@@ -160,10 +160,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ship: {fileID: 0}
-  sensitivity: 1
-  controlRollFactor: 0
-  xSpeed: 5
-  zSpeed: 5
+  sensitivity: 0.2
+  controlRollFactor: 25
+  xSpeed: 50
+  zSpeed: 50
 --- !u!114 &7628359766881385844
 MonoBehaviour:
   m_ObjectHideFlags: 0

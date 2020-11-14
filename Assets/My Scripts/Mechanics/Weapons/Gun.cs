@@ -19,13 +19,14 @@ namespace unciphering.Mechanics
             public int ammoAmount;
             public float damage;
             public AudioClip onLoadWeaponSound;
+            public float reloadTime;
         }
 
         // Core Weapon Instances
         [Header("Weaponery")] 
-        [SerializeField] WeaponStats MG_WeaponStats;
-        [SerializeField] WeaponStats MSL_WeaponStats;
-        [SerializeField] WeaponStats NB_WeaponStats;
+        [SerializeField] public WeaponStats MG_WeaponStats;
+        [SerializeField] public WeaponStats MSL_WeaponStats;
+        [SerializeField] public WeaponStats NB_WeaponStats;
 
         // PreFab Settings
         [Header("External GameObject Settings")] 
@@ -40,12 +41,14 @@ namespace unciphering.Mechanics
         // RayCasting Params
         RaycastHit[] targetedEnemies;
         GameObject targetedEnemyCache;
+        Int32 layerMask; /*Bit Shift to Channel 11 (targets)*/
 
         // MG Params
         [Header("Specific to MG Weapon")]
         [SerializeField] AudioClip MG_ShotSound;
         public bool hasOpenedMGFire {get; set;}
         float cachedTime;
+        
 
         void Start()
         {
@@ -53,13 +56,19 @@ namespace unciphering.Mechanics
             audioSource = GetComponent<AudioSource>();
             MG_BulletParticleSystem = GetComponent<ParticleSystem>();
             SetMGWeaponStats();
+            layerMask = 1 << 11;
+        }
+
+        private void FixedUpdate() 
+        {
+            SetWeaponRayCast();
         }
 
         void Update()
         {
             CrossairAim();
             ProcessMGFire();
-            SetWeaponRayCast();
+
             Debug.Log(currentWeapon);
         }
 
@@ -104,7 +113,7 @@ namespace unciphering.Mechanics
 
         private void RayCastForTracking(int radius)
         {
-            RaycastHit[] hits = Physics.SphereCastAll(transform.position, radius, transform.TransformDirection(Vector3.forward), radius);
+            RaycastHit[] hits = Physics.SphereCastAll(transform.position, radius, transform.TransformDirection(Vector3.forward), radius, layerMask);
             targetedEnemies = Array.FindAll(hits, e => e.collider.gameObject.GetComponent<Enemy>());
 
             // Array Sorting by Distance
@@ -170,7 +179,7 @@ namespace unciphering.Mechanics
             MG_BulletParticleSystem.Stop();
             isFireOpen = false;
         }
-        public void ReleaseMissile()
+        public bool ReleaseMissile()
         { 
             if (targetedEnemies.Length > 0)
             {
@@ -182,21 +191,32 @@ namespace unciphering.Mechanics
                 
                 currentMissile.ActivateMissile(targetedEnemies[0].collider.gameObject);
                 Array.Clear(targetedEnemies,0, targetedEnemies.Length);
+                return true;
+            }
+            else {
+                return false;
             }
         }
-        public void ReleaseNanoBots()
+        public bool ReleaseNanoBots()
         {
-            for (int i = 0; i <= Mathf.Clamp(targetedEnemies.Length,0,5) - 1; ++i)
+            if (targetedEnemies.Length > 0)
             {
-                NanoBots currentNanoBot = Instantiate(NB_NanoBots, transform.position, 
-                transform.rotation);
+                for (int i = 0; i <= Mathf.Clamp(targetedEnemies.Length,0,5) - 1; ++i)
+                {
+                    NanoBots currentNanoBot = Instantiate(NB_NanoBots, transform.position, 
+                    transform.rotation);
 
-                currentNanoBot.ammount = NB_WeaponStats.ammoAmount;
-                currentNanoBot.damage = NB_WeaponStats.damage;
+                    currentNanoBot.ammount = NB_WeaponStats.ammoAmount;
+                    currentNanoBot.damage = NB_WeaponStats.damage;
 
-                currentNanoBot.ActivateNanoBot(targetedEnemies[i].collider.gameObject);
+                    currentNanoBot.ActivateNanoBot(targetedEnemies[i].collider.gameObject);
+                }
+                Array.Clear(targetedEnemies,0, targetedEnemies.Length);
+                return true;
             }
-            Array.Clear(targetedEnemies,0, targetedEnemies.Length);
+            else{
+                return false;
+            }
         }
 
         // Weapon Management
@@ -222,10 +242,10 @@ namespace unciphering.Mechanics
         {
             MG_WeaponStats.ammoAmount = 100;
             MG_WeaponStats.damage = 20;
+            MG_WeaponStats.reloadTime = 0;
         }
         private void ProcessMGFire()
         {
-            
             if (hasOpenedMGFire)
             {
                 if (isFireOpen == false)

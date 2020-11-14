@@ -22,6 +22,7 @@ namespace unciphering.Mechanics
         // From Gun.cs
         public float damage{get;set;}
         public int ammount{get;set;}
+        public float reloadTime{get;set;}
 
         // Visual Params
         Light myLight;

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1247030719891172750}
   - component: {fileID: 1247030719891172749}
   - component: {fileID: 1247030719891172748}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -106,8 +106,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1247030720275861938}
   - component: {fileID: 1247030720275861937}
-  m_Layer: 0
-  m_Name: MainPlayerShip 1
+  m_Layer: 13
+  m_Name: MainPlayerShip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -223,6 +223,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainShip
       objectReference: {fileID: 0}
+    - target: {fileID: 4457149587784295200, guid: 5c7fc88c02b7f2a4385a010bef67af09,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 4458151972639345120, guid: 5c7fc88c02b7f2a4385a010bef67af09,
         type: 3}
       propertyPath: canvas.Array.size
@@ -259,6 +264,11 @@ PrefabInstance:
       propertyPath: gun
       value: 
       objectReference: {fileID: 4893398406058163953}
+    - target: {fileID: 5522668099317033785, guid: 5c7fc88c02b7f2a4385a010bef67af09,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 5955588542531716179, guid: 5c7fc88c02b7f2a4385a010bef67af09,
         type: 3}
       propertyPath: NB_NanoBots
@@ -294,6 +304,16 @@ PrefabInstance:
         type: 3}
       propertyPath: MSL_WeaponStats.damage
       value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 7230238836879495681, guid: 5c7fc88c02b7f2a4385a010bef67af09,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.011
+      objectReference: {fileID: 0}
+    - target: {fileID: 7230238836879495681, guid: 5c7fc88c02b7f2a4385a010bef67af09,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c7fc88c02b7f2a4385a010bef67af09, type: 3}

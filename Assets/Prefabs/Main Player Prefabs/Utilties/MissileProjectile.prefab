@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3175973850506413055}
   - component: {fileID: 3396943513214078239}
   - component: {fileID: 896043425286925032}
-  m_Layer: 8
+  m_Layer: 12
   m_Name: MissileProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -188,7 +188,7 @@ GameObject:
   - component: {fileID: 400022}
   - component: {fileID: 19800002}
   - component: {fileID: 19900002}
-  m_Layer: 8
+  m_Layer: 12
   m_Name: VapourTrailSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4990,7 +4990,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 400028}
-  m_Layer: 8
+  m_Layer: 12
   m_Name: Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5024,7 +5024,7 @@ GameObject:
   - component: {fileID: 400090}
   - component: {fileID: 3300048}
   - component: {fileID: 2300036}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: AircraftFuselageBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5103,7 +5103,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 400092}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: AircraftFuselage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5136,7 +5136,7 @@ GameObject:
   - component: {fileID: 400100}
   - component: {fileID: 19900006}
   - component: {fileID: 19800006}
-  m_Layer: 8
+  m_Layer: 12
   m_Name: AfterburnerLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9914,7 +9914,7 @@ GameObject:
   - component: {fileID: 400102}
   - component: {fileID: 19900008}
   - component: {fileID: 19800008}
-  m_Layer: 8
+  m_Layer: 12
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}

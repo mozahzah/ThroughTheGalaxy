@@ -33,8 +33,8 @@ namespace unciphering.Controller
 
         private void ProcessLook()
         {
-            float pitch = transform.localRotation.eulerAngles.x + CrossPlatformInputManager.GetAxis("Mouse Y") * -sensitivity * Time.deltaTime;
-            float yaw  = transform.localRotation.eulerAngles.y + CrossPlatformInputManager.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
+            float pitch = transform.localRotation.eulerAngles.x + CrossPlatformInputManager.GetAxis("Mouse Y") * -sensitivity;
+            float yaw  = transform.localRotation.eulerAngles.y + CrossPlatformInputManager.GetAxis("Mouse X") * sensitivity;
             transform.localRotation = Quaternion.Euler(pitch, yaw, 0);
         }
 

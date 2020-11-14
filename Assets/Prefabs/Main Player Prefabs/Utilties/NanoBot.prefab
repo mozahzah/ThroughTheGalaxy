@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 2763659502996342301}
   - component: {fileID: 5934439572191086421}
   - component: {fileID: 910180111140313567}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: NanoBot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
