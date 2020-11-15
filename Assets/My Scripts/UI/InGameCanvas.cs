@@ -33,8 +33,8 @@ namespace unciphering.UI
         // Start is called before the first frame update
         void Start()
         {
-            highlightColor = new Color32(255,255,255,100);
-            nonHighlightColor = new Color32(255,255,255,5);
+            highlightColor = new Color32(255,255,255,255);
+            nonHighlightColor = new Color32(255,255,255,50);
         }
 
         void Update()

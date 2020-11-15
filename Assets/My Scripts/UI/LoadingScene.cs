@@ -9,7 +9,6 @@ public class LoadingScene : MonoBehaviour
     [SerializeField] Text title;
     Color color;
 
-    // Start is called before the first frame update
     void Start()
     {
        StartCoroutine(LoadAsyncScene());
@@ -22,15 +21,13 @@ public class LoadingScene : MonoBehaviour
         title.color = color;
     }
 
-    // Update is called once per frame
-    IEnumerator LoadAsyncScene(){
+    IEnumerator LoadAsyncScene()
+    {
         AsyncOperation gameAsynLoad = SceneManager.LoadSceneAsync(2);
 
         while (!gameAsynLoad.isDone)
         {
             yield return null;
         }
-
-
     }
 }

@@ -279,6 +279,31 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2019831492616453006, guid: 4eadce3fc02cb2b43b5a30ffc24bf803,
+        type: 3}
+      propertyPath: m_CullTransparentMesh
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2208052732679075757, guid: 4eadce3fc02cb2b43b5a30ffc24bf803,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2208052732679075757, guid: 4eadce3fc02cb2b43b5a30ffc24bf803,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2208052732679075757, guid: 4eadce3fc02cb2b43b5a30ffc24bf803,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2208052732679075757, guid: 4eadce3fc02cb2b43b5a30ffc24bf803,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 62d0f0dddc10f7d40af0f27995193099, type: 2}
     - target: {fileID: 5738980308518410043, guid: 4eadce3fc02cb2b43b5a30ffc24bf803,
         type: 3}
       propertyPath: m_LocalPosition.x

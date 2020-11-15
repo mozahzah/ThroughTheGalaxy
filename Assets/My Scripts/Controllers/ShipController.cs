@@ -1,11 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityStandardAssets.CrossPlatformInput;
 using unciphering.Mechanics;
-using unciphering.Characters;
 using unciphering.UI;
 
 

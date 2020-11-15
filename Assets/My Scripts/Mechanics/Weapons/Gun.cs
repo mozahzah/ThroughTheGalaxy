@@ -85,11 +85,11 @@ namespace unciphering.Mechanics
         {
             if (currentWeapon == WeaponType.MSL)
             {
-                RayCastForTracking(80);
+                RayCastForTracking(150);
             }
             else if (currentWeapon == WeaponType.NB)
             {
-                RayCastForTracking(40);
+                RayCastForTracking(60);
             }
             else
             {
@@ -97,23 +97,17 @@ namespace unciphering.Mechanics
             }
         }
 
-        // private void OnDrawGizmos() 
-        // {
-        //     Gizmos.color = Color.red;
-        //     if (currentWeapon == WeaponType.MSL)
-        //     {
-        //         Gizmos.DrawWireSphere(transform.position, 40*Mathf.Sin(Time.timeSinceLevelLoad*10));
-        //     }
-        //     if (currentWeapon == WeaponType.NB)
-        //     {
-        //        Gizmos.DrawWireSphere(transform.position, 20);
-        //     }
-        // }
-
-
-        private void RayCastForTracking(int radius)
+        private void OnDrawGizmos() 
         {
-            RaycastHit[] hits = Physics.SphereCastAll(transform.position, radius, transform.TransformDirection(Vector3.forward), radius, layerMask);
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, 30);
+            
+        }
+
+
+        private void RayCastForTracking(int distance)
+        {
+            RaycastHit[] hits = Physics.SphereCastAll(transform.position, 30, transform.TransformDirection(Vector3.forward), distance, layerMask);
             targetedEnemies = Array.FindAll(hits, e => e.collider.gameObject.GetComponent<Enemy>());
 
             // Array Sorting by Distance
@@ -155,7 +149,7 @@ namespace unciphering.Mechanics
                     }
                 } 
             }
-            if (Vector3.Distance(transform.position, targetedEnemies[0].transform.position) > radius - 1)
+            if (Vector3.Distance(transform.position, targetedEnemies[0].transform.position) > distance - 1)
             {
                 TurnOffTargeting();
             }
@@ -229,11 +223,13 @@ namespace unciphering.Mechanics
            } 
            if (currentWeapon == WeaponType.MSL)
            {
+               CloseMGFire();
+               hasOpenedMGFire = false;
                audioSource.PlayOneShot(MSL_WeaponStats.onLoadWeaponSound);
            } 
            if (currentWeapon == WeaponType.NB)
            {
-               audioSource.PlayOneShot(NB_WeaponStats.onLoadWeaponSound);  
+               audioSource.PlayOneShot(NB_WeaponStats.onLoadWeaponSound); 
            } 
         }
         
