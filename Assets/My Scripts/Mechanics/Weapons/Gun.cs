@@ -68,8 +68,6 @@ namespace unciphering.Mechanics
         {
             CrossairAim();
             ProcessMGFire();
-
-            Debug.Log(currentWeapon);
         }
 
         // Aiming and Targeting
@@ -78,8 +76,8 @@ namespace unciphering.Mechanics
             transform.rotation = Quaternion.LookRotation(Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)) +
                            Camera.main.transform.forward * 25 -
                             transform.position);
-            Debug.DrawLine(transform.position,
-            Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)) + Camera.main.transform.forward * 25, Color.red);
+            //Debug.DrawLine(transform.position,
+            //Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)) + Camera.main.transform.forward * 25, Color.red);
         }
         private void SetWeaponRayCast()
         {
@@ -96,14 +94,6 @@ namespace unciphering.Mechanics
                 TurnOffTargeting();
             }
         }
-
-        private void OnDrawGizmos() 
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, 30);
-            
-        }
-
 
         private void RayCastForTracking(int distance)
         {

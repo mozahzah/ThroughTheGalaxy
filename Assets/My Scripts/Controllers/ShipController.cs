@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using unciphering.Mechanics;
 using unciphering.UI;
+using UnityEngine.SceneManagement;
 
 
 namespace unciphering.Controller
@@ -11,7 +12,9 @@ namespace unciphering.Controller
     public class ShipController : MonoBehaviour
     {
         [Header("General")]
+        [SerializeField] Engine engine;
         [SerializeField] GameObject[] canvas;
+
 
         [Header("Guns")]
         [SerializeField] Gun gun;
@@ -39,24 +42,38 @@ namespace unciphering.Controller
 
         void Update()
         {
+            ProcessMovement();
             SwitchWeapon();
             ReleaseDroneBot();
-            caseSwitch = gun.currentWeapon;  
+            caseSwitch = gun.currentWeapon;
             switch (caseSwitch)
             {
                 case Gun.WeaponType.MG:
-                gun.hasOpenedMGFire = Shooting();
-                break;
+                    gun.hasOpenedMGFire = Shooting();
+                    break;
                 case Gun.WeaponType.MSL:
-                LaunchMissile();
-                break;
+                    LaunchMissile();
+                    break;
                 case Gun.WeaponType.NB:
-                ReleaseNanoBots();
-                break;
+                    ReleaseNanoBots();
+                    break;
                 default:
-                gun.hasOpenedMGFire = false;
-                break;
+                    gun.hasOpenedMGFire = false;
+                    break;
             }
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                SceneManager.LoadScene(2);
+            }
+
+
+        }
+
+        private void ProcessMovement()
+        {
+            engine.ProcessLook(CrossPlatformInputManager.GetAxis("Mouse Y"), CrossPlatformInputManager.GetAxis("Mouse X"));
+            engine.BasicMouvement(CrossPlatformInputManager.GetAxis("Horizontal"), CrossPlatformInputManager.GetAxis("Vertical"));
         }
 
         // Gun Activation
@@ -166,9 +183,6 @@ namespace unciphering.Controller
             }
         }
 
-        private void PlayReloadAnimation()
-        {
-           
-        }
+        
     }
 }

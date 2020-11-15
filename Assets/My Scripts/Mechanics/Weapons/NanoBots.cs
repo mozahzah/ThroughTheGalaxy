@@ -11,6 +11,7 @@ namespace unciphering.Mechanics
         GameObject targetedEnemy;
         Enemy currentEnemy;
 
+        [SerializeField] float speed = 30;
         float floatingTime = 2;
         float initialTime;
         float initialTimeForDestruction;
@@ -50,9 +51,9 @@ namespace unciphering.Mechanics
             {
                 OnNanoRelease();
             }
+
             if (destructionActivated)
             {
-                GetComponent<Rigidbody>().velocity = Vector3.zero;
                 if (Time.timeSinceLevelLoad - initialTimeForDestruction > 2)
                 {
                     currentEnemy.ProcessDamage(damage);
@@ -78,7 +79,8 @@ namespace unciphering.Mechanics
         {
             if (Time.timeSinceLevelLoad - initialTime < floatingTime)
             {
-                GetComponent<Rigidbody>().AddForce(transform.up * 25 * Time.deltaTime);
+                GetComponent<Rigidbody>().
+                AddForce((transform.up + new Vector3(Random.Range(-5,5),0,Random.Range(-5,5)).normalized) * 1 * Time.deltaTime, ForceMode.Impulse);
             }
             else
             {
@@ -91,8 +93,17 @@ namespace unciphering.Mechanics
                 else 
                 {
                     if (targetedEnemy == null) return;
-                    transform.rotation = Quaternion.LookRotation(targetedEnemy.transform.position - transform.position);
-                    GetComponent<Rigidbody>().AddForce(transform.forward * 500 * Time.deltaTime);
+                    if (Vector3.Distance(transform.position, targetedEnemy.transform.position) < 10)
+                    {
+                        GetComponent<Rigidbody>().velocity = Vector3.zero;
+                        transform.position = targetedEnemy.transform.position;
+                    }
+                    else 
+                    {
+                        transform.LookAt(targetedEnemy.transform.position);
+                        transform.position = Vector3.MoveTowards(transform.position, targetedEnemy.transform.position, speed*Time.deltaTime);
+                    }
+                    
                 }
                 
             } 

@@ -13,6 +13,7 @@ namespace unciphering.UI
         [SerializeField] Transform MSL_Icon;
         [SerializeField] Transform NB_Icon;
         [SerializeField] Image healthBarFill;
+        [SerializeField] GameObject rearView;
 
         public int selectedWeapon;
         Color highlightColor;
@@ -49,6 +50,17 @@ namespace unciphering.UI
             if (Time.timeSinceLevelLoad - cachedTime3 > NB_reloadTime)
             {
                 ResetAnimation(3);
+            }
+
+
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                if (rearView.active == false)
+                {
+                    rearView.SetActive(true);
+                }
+                else rearView.SetActive(false);
+                
             }
 
         }

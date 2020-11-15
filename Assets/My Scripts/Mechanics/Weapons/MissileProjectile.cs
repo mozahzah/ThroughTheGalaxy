@@ -11,6 +11,7 @@ namespace unciphering.Mechanics
         GameObject targetedEnemy;
         bool isMissileLaunched;
 
+        [SerializeField] float speed = 50;
         float floatingTime = 1.5f;
         float initialTime;
         float lifeTime;
@@ -72,7 +73,7 @@ namespace unciphering.Mechanics
                 }
                 else 
                 {
-                    GetComponent<Rigidbody>().AddForce(transform.forward * 5000 * Time.deltaTime);
+                    transform.position = Vector3.MoveTowards(transform.position, targetedEnemy.transform.position, speed*Time.deltaTime);
                 }
                 
             } 

@@ -1,6 +1,7 @@
 ﻿
 using UnityEngine;
 using unciphering.Mechanics;
+using UnityStandardAssets.CrossPlatformInput;
 
 
 // Controls Canvas and Camera Management
@@ -9,6 +10,7 @@ namespace unciphering.Controller
 {
     public class DroneController : MonoBehaviour
     {
+        [SerializeField] Engine engine;
         [SerializeField] public GameObject[] canvas;
         [SerializeField] public ShipController MotherShip;
         [SerializeField] Camera MainCamera;
@@ -28,6 +30,13 @@ namespace unciphering.Controller
         void Update()
         {
             ReturnToMotherShip();
+            ProcessMovement();
+        }
+
+        private void ProcessMovement()
+        {
+            engine.ProcessLook(CrossPlatformInputManager.GetAxis("Mouse Y"), CrossPlatformInputManager.GetAxis("Mouse X"));
+            engine.BasicMouvement(CrossPlatformInputManager.GetAxis("Horizontal"), CrossPlatformInputManager.GetAxis("Vertical"));
         }
 
         private void SwitchCanvases() 

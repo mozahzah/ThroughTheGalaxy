@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
+
 
 namespace unciphering.Controller
 {
@@ -10,13 +10,12 @@ namespace unciphering.Controller
         [SerializeField] GameObject ship;
         [Header("General")]
         [SerializeField] float sensitivity = 1f;
+        [Tooltip("In m/s")][SerializeField] float speed = 5;
 
         [Header("Throw Control")]
         [SerializeField] float controlRollFactor = 0f;
         float xThrow, yThrow, zThrow;
 
-        [Tooltip("In ms")] [SerializeField] float xSpeed = 5f;
-        [Tooltip("In ms")] [SerializeField] float zSpeed = 5f;
 
 
         private void Start() 
@@ -26,34 +25,53 @@ namespace unciphering.Controller
         }
         void Update()
         {
-            ProcessLook();
-            BasicMouvement();
-            ProcessRotation();
+            
         }
 
-        private void ProcessLook()
+        public void BasicMouvement()
         {
-            float pitch = transform.localRotation.eulerAngles.x + CrossPlatformInputManager.GetAxis("Mouse Y") * -sensitivity;
-            float yaw  = transform.localRotation.eulerAngles.y + CrossPlatformInputManager.GetAxis("Mouse X") * sensitivity;
+            // Combat Translation Randomizing Strafing
+        }
+
+        public void BasicMouvement(float xThrow, float zThrow)
+        {
+            ProcessRotation(xThrow);
+            float xOffset = xThrow * speed * Time.deltaTime;
+            transform.Translate(Vector3.right * xOffset);
+
+            float zOffset = zThrow * speed * Time.deltaTime;
+            transform.Translate(Vector3.forward * zOffset);
+        }
+
+        
+
+
+        // Two Look Overloads
+        public void ProcessLook(float inputY, float inputX)
+        {
+            float pitch = transform.localRotation.eulerAngles.x + inputY * -sensitivity;
+            float yaw  = transform.localRotation.eulerAngles.y + inputX * sensitivity;
             transform.localRotation = Quaternion.Euler(pitch, yaw, 0);
         }
 
-        private void ProcessRotation()
+        public void ProcessLook(Vector3 position)
+        {
+            var targetRotation = Quaternion.LookRotation(position - transform.position);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 20 * Time.deltaTime);
+        }
+
+
+        
+
+
+
+
+        // Animation Purposes
+        private void ProcessRotation(float xThrow)
         {
             float roll= xThrow * controlRollFactor;
             ship.transform.localRotation = Quaternion.Euler(ship.transform.localRotation.eulerAngles.x, 
             ship.transform.localRotation.eulerAngles.y, roll);
-        }
-
-        private void BasicMouvement()
-        {
-            xThrow = CrossPlatformInputManager.GetAxis("Horizontal");
-            float xOffset = xThrow * xSpeed * Time.deltaTime;
-            transform.Translate(Vector3.right * xOffset);
-
-            zThrow = CrossPlatformInputManager.GetAxis("Vertical");
-            float zOffset = zThrow * zSpeed * Time.deltaTime;
-            transform.Translate(Vector3.forward * zOffset);
         }
     }
 }
