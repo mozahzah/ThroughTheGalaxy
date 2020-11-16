@@ -15,12 +15,12 @@ namespace unciphering.Controller
 
         // Patrol Params
         int currentWaypointIndex = 0;
-        float dwellTime = 1;
+        float dwellTime = 0.5f;
         float timeSinceLastArrivedAtWaypoint;
         float suspicionTime = 2;
         float waypointTolerance = 10;
         // Attack Params
-        float chaseDistance = 100;
+        float chaseDistance = 30;
         float attackDistance = 30;
         
         void Start()
@@ -95,6 +95,7 @@ namespace unciphering.Controller
             
             else 
             {
+                gun.StopFire();
                 PatrolBehaviour();
             }
         }

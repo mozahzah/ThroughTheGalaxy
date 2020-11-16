@@ -57,7 +57,7 @@ namespace unciphering.Controller
         public void ProcessLook(Vector3 position)
         {
             var targetRotation = Quaternion.LookRotation(position - transform.position);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 20 * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 15 * Time.deltaTime);
         }
 
 

@@ -26,7 +26,6 @@ namespace unciphering.Mechanics
         public float reloadTime{get;set;}
 
         // Visual Params
-        Light myLight;
         bool hasFxPlayed = false;
         
         // Audio Params
@@ -37,16 +36,12 @@ namespace unciphering.Mechanics
         {
             initialTime = Time.timeSinceLevelLoad;
             lifeTime = Time.timeSinceLevelLoad;
-            myLight = GetComponent<Light>();
             audioSource = GetComponent<AudioSource>();
             audioSource.PlayOneShot(audioClips[0]);
         }
 
         void Update()
         {
-            // Blink Light
-            myLight.intensity = Mathf.Sin(10 * Time.timeSinceLevelLoad);
-
             if (isNanoLaunched)
             {
                 OnNanoRelease();

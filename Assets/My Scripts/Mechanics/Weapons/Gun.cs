@@ -74,7 +74,7 @@ namespace unciphering.Mechanics
         private void CrossairAim()
         {
             transform.rotation = Quaternion.LookRotation(Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)) +
-                           Camera.main.transform.forward * 25 -
+                           Camera.main.transform.forward * 20 -
                             transform.position);
             //Debug.DrawLine(transform.position,
             //Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)) + Camera.main.transform.forward * 25, Color.red);
