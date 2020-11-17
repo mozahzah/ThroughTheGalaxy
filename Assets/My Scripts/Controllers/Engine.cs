@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace unciphering.Controller
 {
-   
     public class Engine : MonoBehaviour
     {
         [SerializeField] GameObject ship;
@@ -31,6 +30,11 @@ namespace unciphering.Controller
         public void BasicMouvement()
         {
             // Combat Translation Randomizing Strafing
+        }
+
+        public void BasicMouvement(float speed)
+        {
+            transform.Translate(Vector3.forward * speed * Time.deltaTime);
         }
 
         public void BasicMouvement(float xThrow, float zThrow)

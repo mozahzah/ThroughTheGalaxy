@@ -73,21 +73,28 @@ namespace unciphering.Mechanics
         // Aiming and Targeting
         private void CrossairAim()
         {
-            transform.rotation = Quaternion.LookRotation(Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)) +
-                           Camera.main.transform.forward * 20 -
-                            transform.position);
-            //Debug.DrawLine(transform.position,
-            //Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)) + Camera.main.transform.forward * 25, Color.red);
+            Vector3 crossairLocation = Camera.main.
+            ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f));
+            RaycastHit hit;
+            //Debug.DrawLine(crossairLocation, Camera.main.transform.TransformDirection(Vector3.forward) * 10000, Color.red);
+            if (Physics.Linecast(crossairLocation, Camera.main.transform.TransformDirection(Vector3.forward) * 10000, out hit, layerMask))
+            {
+                transform.rotation = Quaternion.LookRotation(hit.transform.position - transform.position);
+            }
+            else
+            {
+               // transform.rotation = Quaternion.LookRotation(Camera.main.transform.TransformDirection(Vector3.forward) * 10000);
+            }
         }
         private void SetWeaponRayCast()
         {
             if (currentWeapon == WeaponType.MSL)
             {
-                RayCastForTracking(150);
+                RayCastForTracking(300, 50);
             }
             else if (currentWeapon == WeaponType.NB)
             {
-                RayCastForTracking(60);
+                RayCastForTracking(1,100);
             }
             else
             {
@@ -95,9 +102,9 @@ namespace unciphering.Mechanics
             }
         }
 
-        private void RayCastForTracking(int distance)
+        private void RayCastForTracking(int distance, int radius)
         {
-            RaycastHit[] hits = Physics.SphereCastAll(transform.position, 30, transform.TransformDirection(Vector3.forward), distance, layerMask);
+            RaycastHit[] hits = Physics.SphereCastAll(transform.position, radius, transform.TransformDirection(Vector3.forward), distance, layerMask);
             targetedEnemies = Array.FindAll(hits, e => e.collider.gameObject.GetComponent<Enemy>());
 
             // Array Sorting by Distance
@@ -107,11 +114,15 @@ namespace unciphering.Mechanics
                 {
                     if (Vector3.Distance(targetedEnemies[i].collider.transform.position,
                         Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)) +
-                        Camera.main.transform.forward * Vector3.Distance(targetedEnemies[i].collider.transform.position, Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)))) >
+                        Camera.main.transform.TransformDirection(Vector3.forward) * 
+                        Vector3.Distance(((targetedEnemies[i].collider.transform.position+targetedEnemies[j].collider.transform.position)/2)
+                        , Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)))) >
 
                         Vector3.Distance(targetedEnemies[j].collider.transform.position,
                         Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)) +
-                        Camera.main.transform.forward * Vector3.Distance(targetedEnemies[i].collider.transform.position, Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)))))
+                        Camera.main.transform.TransformDirection(Vector3.forward) * 
+                        Vector3.Distance(((targetedEnemies[i].collider.transform.position+targetedEnemies[j].collider.transform.position)/2), 
+                        Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)))))
                     {
                         var temp = targetedEnemies[i];
                         targetedEnemies[i] = targetedEnemies[j];
@@ -124,25 +135,30 @@ namespace unciphering.Mechanics
             // Weapon Specific Targetting Methods
             if (currentWeapon == WeaponType.MSL)
             {
-                if (targetedEnemies != null || targetedEnemies.Length != 0)
+                if (targetedEnemies != null)
                 {
                     targetedEnemies[0].collider.gameObject.GetComponent<Enemy>().isSelected = true;
+                }
+                if (Vector3.Distance(transform.position, targetedEnemies[0].transform.position) > distance - 2)
+                {
+                    TurnOffTargeting();
                 }
             }
             else if (currentWeapon == WeaponType.NB)
             {
-                if (targetedEnemies != null || targetedEnemies.Length != 0)
+                if (targetedEnemies != null)
                 {   
                     for (int i = 0; i <= Mathf.Clamp(targetedEnemies.Length, 0, 5) - 1; ++i)
                     {
                         targetedEnemies[i].collider.gameObject.GetComponent<Enemy>().isSelected = true;
                     }
+                }
+                if (Vector3.Distance(transform.position, targetedEnemies[0].transform.position) > radius - 2)
+                {
+                    TurnOffTargeting();
                 } 
             }
-            if (Vector3.Distance(transform.position, targetedEnemies[0].transform.position) > distance - 1)
-            {
-                TurnOffTargeting();
-            }
+            
         }       
         private void TurnOffTargeting()
         {
@@ -206,21 +222,24 @@ namespace unciphering.Mechanics
         // Weapon Management
         public void SwitchWeapon(int i)
         {
-           currentWeapon = (WeaponType)(Enum.GetValues(typeof(WeaponType)).GetValue(i));
-           if (currentWeapon == WeaponType.MG)
-           {
-                audioSource.PlayOneShot(MG_WeaponStats.onLoadWeaponSound);
-           } 
-           if (currentWeapon == WeaponType.MSL)
-           {
-               CloseMGFire();
-               hasOpenedMGFire = false;
-               audioSource.PlayOneShot(MSL_WeaponStats.onLoadWeaponSound);
-           } 
-           if (currentWeapon == WeaponType.NB)
-           {
-               audioSource.PlayOneShot(NB_WeaponStats.onLoadWeaponSound); 
-           } 
+            if (targetedEnemies == null) {TurnOffTargeting();}
+
+                currentWeapon = (WeaponType)(Enum.GetValues(typeof(WeaponType)).GetValue(i));
+                if (currentWeapon == WeaponType.MG)
+                {
+                    audioSource.PlayOneShot(MG_WeaponStats.onLoadWeaponSound);
+                } 
+                if (currentWeapon == WeaponType.MSL)
+                {
+                    CloseMGFire();
+                    hasOpenedMGFire = false;
+                    audioSource.PlayOneShot(MSL_WeaponStats.onLoadWeaponSound);
+                } 
+                if (currentWeapon == WeaponType.NB)
+                {
+                    audioSource.PlayOneShot(NB_WeaponStats.onLoadWeaponSound); 
+                } 
+            
         }
         
         // For Machine Gun
@@ -240,7 +259,7 @@ namespace unciphering.Mechanics
                     GetComponent<AudioSource>().PlayOneShot(MG_ShotSound);
                     cachedTime = Time.timeSinceLevelLoad;
                 }
-                if (Time.timeSinceLevelLoad - cachedTime > 0.2)
+                if (Time.timeSinceLevelLoad - cachedTime > 0.1)
                 {
                     GetComponent<AudioSource>().PlayOneShot(MG_ShotSound);
                     cachedTime = Time.timeSinceLevelLoad;

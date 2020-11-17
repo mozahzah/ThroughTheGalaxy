@@ -208,7 +208,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ship: {fileID: 3212383999877650818}
   sensitivity: 0.2
-  speed: 20
+  speed: 30
   controlRollFactor: -20
 --- !u!54 &1658648701
 Rigidbody:
@@ -362,7 +362,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 50
+      scalar: 100
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -3978,7 +3978,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     minKillSpeed: 0
-    maxKillSpeed: 10000
+    maxKillSpeed: 10
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
@@ -5334,7 +5334,7 @@ PrefabInstance:
     - target: {fileID: 7230238836879495681, guid: 5c7fc88c02b7f2a4385a010bef67af09,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.011
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7230238836879495681, guid: 5c7fc88c02b7f2a4385a010bef67af09,
         type: 3}
@@ -5344,7 +5344,32 @@ PrefabInstance:
     - target: {fileID: 7230238836879495681, guid: 5c7fc88c02b7f2a4385a010bef67af09,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.001
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7230238836879495681, guid: 5c7fc88c02b7f2a4385a010bef67af09,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7230238836879495681, guid: 5c7fc88c02b7f2a4385a010bef67af09,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7230238836879495681, guid: 5c7fc88c02b7f2a4385a010bef67af09,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7230238836879495681, guid: 5c7fc88c02b7f2a4385a010bef67af09,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7230238836879495681, guid: 5c7fc88c02b7f2a4385a010bef67af09,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4401167493938317127, guid: 5c7fc88c02b7f2a4385a010bef67af09, type: 3}

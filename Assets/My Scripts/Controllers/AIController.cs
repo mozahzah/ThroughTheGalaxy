@@ -8,20 +8,31 @@ namespace unciphering.Controller
     {
         // General
         [SerializeField] PatrolPath patrolPath;
-        [SerializeField] Engine engine;
-        [SerializeField] EnemyGun gun;
         [SerializeField] ShipController mainPlayer;
+        Engine engine;
+        EnemyGun gun;
         Vector3 target;
+        Vector3 lastSeenTarget;
+        bool isSuspicious;
 
         // Patrol Params
         int currentWaypointIndex = 0;
-        float dwellTime = 0.5f;
         float timeSinceLastArrivedAtWaypoint;
-        float suspicionTime = 2;
+        float timeSinceLastSeenPlayer;
         float waypointTolerance = 10;
+
+        
+        [Header("Patrol Settings")]
+        [SerializeField][Tooltip("in sec")] [Range(0,5)] float dwellTime = 0.5f;
+        [SerializeField][Tooltip("in sec")] [Range(0,5)] float suspicionTime = 2;
+        [SerializeField][Tooltip("in m/s")] [Range(0,50)]float patrolSpeed = 20;
+        
+
         // Attack Params
-        float chaseDistance = 30;
-        float attackDistance = 30;
+        [Header("Attack Settings")]
+        [SerializeField][Tooltip("in m")] float chaseDistance = 60;
+        [SerializeField][Tooltip("in m")] float attackDistance = 30;
+        [SerializeField][Tooltip("in m/s")] [Range(0,50)] float attackSpeed = 30;
         
         void Start()
         {
@@ -30,14 +41,20 @@ namespace unciphering.Controller
             engine = GetComponent<Engine>();
         }
 
+        private void OnDrawGizmos() 
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, chaseDistance);
+        }
         // Update is called once per frame
         void Update()
         {
+            
             AttackBehaviour();
 
             target = mainPlayer.gameObject.transform.position;
             timeSinceLastArrivedAtWaypoint += Time.deltaTime;
-            
+            timeSinceLastSeenPlayer += Time.deltaTime;
         }
 
          private void PatrolBehaviour()
@@ -56,7 +73,7 @@ namespace unciphering.Controller
             { 
                 nextPosition = GetCurrentWaypoint();
                 engine.ProcessLook(nextPosition);
-                transform.Translate(Vector3.forward * 10 * Time.deltaTime);
+                engine.BasicMouvement(patrolSpeed);
             }
         }
 
@@ -84,21 +101,47 @@ namespace unciphering.Controller
             if (InAttackRangeOfPlayer())
             {
                 engine.ProcessLook(target);
-                gun.Fire();
+                //gun.Fire();
             }
             else if (InFollowRangeOfPlayer())
             {
-                gun.StopFire();
+                //gun.StopFire();
                 engine.ProcessLook(target); 
-                transform.Translate(Vector3.forward * 20 * Time.deltaTime);
+                engine.BasicMouvement(attackSpeed);
+                lastSeenTarget = target;
+                isSuspicious = true;
             }
-            
-            else 
+            else if (isSuspicious)
             {
-                gun.StopFire();
+                SuspiciousBehavior();
+            }
+            else
+            {
                 PatrolBehaviour();
             }
         }
+
+        private void SuspiciousBehavior()
+        {
+            if(Vector3.Distance(transform.position, lastSeenTarget) > 5)
+            {
+                Debug.Log(gameObject.name + "Is MOVING TO that last seen");
+                transform.position = Vector3.MoveTowards(transform.position, lastSeenTarget, attackSpeed * Time.deltaTime);
+                timeSinceLastSeenPlayer = 0;
+            }
+            else
+            {
+                Debug.Log(Vector3.Distance(transform.position, lastSeenTarget));
+                Debug.Log(gameObject.name + "Is At that last seen");
+                if (timeSinceLastSeenPlayer > suspicionTime)
+                {
+                    isSuspicious = false;
+                }
+                
+            }
+            
+        }
+
         private bool InAttackRangeOfPlayer()
         {
             float DistanceToPlayer = Vector3.Distance(target, transform.position);
