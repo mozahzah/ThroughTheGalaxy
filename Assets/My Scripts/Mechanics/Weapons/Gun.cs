@@ -79,11 +79,7 @@ namespace unciphering.Mechanics
             //Debug.DrawLine(crossairLocation, Camera.main.transform.TransformDirection(Vector3.forward) * 10000, Color.red);
             if (Physics.Linecast(crossairLocation, Camera.main.transform.TransformDirection(Vector3.forward) * 10000, out hit, layerMask))
             {
-                transform.rotation = Quaternion.LookRotation(hit.transform.position - transform.position);
-            }
-            else
-            {
-               // transform.rotation = Quaternion.LookRotation(Camera.main.transform.TransformDirection(Vector3.forward) * 10000);
+                transform.LookAt(hit.point);
             }
         }
         private void SetWeaponRayCast()

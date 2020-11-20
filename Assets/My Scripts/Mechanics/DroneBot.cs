@@ -6,73 +6,49 @@ using unciphering.Characters;
 
 namespace unciphering.Mechanics
 {
+
+    
+
     public class DroneBot : MonoBehaviour
     {
-        // These are passed through by the mother ship on release
-        
-
-
+        // General Params
+        public Camera cam;
         RaycastHit[] targetedEnemies;
+        [SerializeField] float scanRadius = 500;
+        Int32 layerMask;
 
-        // Start is called before the first frame update
         void Start()
         {
-            
-        }
-
-        
-        void Update()
-        {
-            
-            ScanEnemies();
+            layerMask = 1 << 11;
         }
 
         private void RayCastForTracking()
         {
-                RaycastHit[] hits = Physics.SphereCastAll(transform.position, 50, transform.TransformDirection(Vector3.forward), Mathf.Infinity);
-                targetedEnemies = Array.FindAll(hits, e => e.collider.gameObject.GetComponent<Enemy>());
-
-
-                if (targetedEnemies != null){
-                    Debug.Log("Array is not empty");
-                }
-
-                // Array Sorting by Distance
-                // for (int i = 0; i < targetedEnemies.Length - 1; i++)
-                // {
-                //     for (int j = i + 1; j < targetedEnemies.Length; j++)
-                //     {
-                //         if (Vector3.Distance(targetedEnemies[i].collider.transform.position,
-                //             Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)) +
-                //             Camera.main.transform.forward * Vector3.Distance(targetedEnemies[i].collider.transform.position, Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)))) >
-
-                //             Vector3.Distance(targetedEnemies[j].collider.transform.position,
-                //             Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)) +
-                //             Camera.main.transform.forward * Vector3.Distance(targetedEnemies[i].collider.transform.position, Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f)))))
-                //         {
-                //             var temp = targetedEnemies[i];
-                //             targetedEnemies[i] = targetedEnemies[j];
-                //             targetedEnemies[j] = temp;
-                //         }
-                //     }
-                // }
-
+            RaycastHit[] hits = Physics.SphereCastAll(transform.position, scanRadius, transform.TransformDirection(Vector3.forward), 1, layerMask);
+            targetedEnemies = Array.FindAll(hits, e => e.collider.gameObject.GetComponent<Enemy>());
         }
+
         public void ScanEnemies()
         {
-            if (Input.GetKeyDown(KeyCode.H))
+            RayCastForTracking();
+            foreach (var e in targetedEnemies)
             {
-                RayCastForTracking();
-                foreach (var e in targetedEnemies)
-                {
-                    e.collider.gameObject.GetComponent<Enemy>().TagEnemy();
-                }
+                e.collider.gameObject.GetComponent<Enemy>().TagEnemy();
             }
         }
 
-
-
-
+        public void TagEnemy()
+        {
+            Vector3 crossairLocation = cam.
+            ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f));
+            RaycastHit hit;
+            if (Physics.Linecast(crossairLocation, cam.transform.TransformDirection(Vector3.forward) * 10000, out hit, layerMask))
+            {
+                if (hit.collider.gameObject.GetComponent<Enemy>())
+                {
+                    hit.collider.gameObject.GetComponent<Enemy>().TagEnemy();
+                }
+            }
+        }
     }
-
 }

@@ -6,6 +6,10 @@ namespace unciphering.UI
 {
   public class CameraLock : MonoBehaviour 
   {
+
+    [SerializeField] Vector3 cameraPosition;
+
+
     void Start() 
     {
       transform.localPosition = (new Vector3(0,0.3f,-2));
@@ -14,7 +18,7 @@ namespace unciphering.UI
     {
         if (gameObject.tag == "MainCamera")
         {
-          transform.localPosition = Vector3.Lerp (transform.localPosition, new Vector3(0,0.3f,-2), 0.5f * Time.deltaTime);
+          transform.localPosition = Vector3.Lerp (transform.localPosition, cameraPosition, 0.5f * Time.deltaTime);
           transform.rotation = new Quaternion(0,0,0,0);
         }
         if (gameObject.tag == "SecondaryCamera")
