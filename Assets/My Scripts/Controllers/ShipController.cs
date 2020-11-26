@@ -183,6 +183,15 @@ namespace unciphering.Controller
             }
         }
 
+        public void OnDeath()
+        {
+            SceneManager.LoadScene(2);
+        }
+
+        private void OnCollisionEnter(Collision other) {
+            OnDeath();
+        }
+
         
     }
 }

@@ -1,7 +1,6 @@
 ﻿
 using UnityEngine;
 using unciphering.Mechanics;
-using unciphering.Characters;
 using UnityStandardAssets.CrossPlatformInput;
 
 

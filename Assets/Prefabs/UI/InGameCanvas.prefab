@@ -392,7 +392,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1292740476435511364
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1167,6 +1167,7 @@ MonoBehaviour:
   MSL_Icon: {fileID: 8176020913828593644}
   NB_Icon: {fileID: 1670056621133067548}
   healthBarFill: {fileID: 2490310784576855739}
+  rearView: {fileID: 0}
   selectedWeapon: 0
   MG_isReloading: 0
   MSL_isReloading: 0

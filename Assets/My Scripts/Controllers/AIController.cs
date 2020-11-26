@@ -14,6 +14,8 @@ namespace unciphering.Controller
         Vector3 target;
         Vector3 lastSeenTarget;
         bool isSuspicious;
+        public bool isProvoked;
+        private List<ParticleCollisionEvent> collisionEvents;
 
         // Patrol Params
         int currentWaypointIndex = 0;
@@ -44,13 +46,23 @@ namespace unciphering.Controller
         private void OnDrawGizmos() 
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, chaseDistance);
+            //Gizmos.DrawWireSphere(transform.position, chaseDistance);
         }
-        // Update is called once per frame
+
         void Update()
         {
+            if (isProvoked)
+            {
+                Debug.Log("Provoked");
+                AttackBehaviour();
+            }
+            else 
+            {
+                Debug.Log("Patrolling");
+                PatrolBehaviour();
+            }
+            Debug.Log(isProvoked);
             
-            AttackBehaviour();
 
             target = mainPlayer.gameObject.transform.position;
             timeSinceLastArrivedAtWaypoint += Time.deltaTime;
@@ -59,6 +71,7 @@ namespace unciphering.Controller
 
          private void PatrolBehaviour()
         {
+            if (patrolPath == null) return;
             Vector3 nextPosition = patrolPath.GetWaypoint(currentWaypointIndex);
             if (AtWaypoint())
             {
@@ -103,21 +116,22 @@ namespace unciphering.Controller
                 engine.ProcessLook(target);
                 //gun.Fire();
             }
-            else if (InFollowRangeOfPlayer())
+            // if (InFollowRangeOfPlayer())
+            // {
+            //     gun.StopFire();
+            //     engine.ProcessLook(target); 
+            //     engine.BasicMouvement(attackSpeed);
+            //     lastSeenTarget = target;
+            //     isSuspicious = true;
+            // }
+            // else if (isSuspicious)
+            // {
+            //     SuspiciousBehavior();
+            // }
+            else 
             {
-                //gun.StopFire();
                 engine.ProcessLook(target); 
                 engine.BasicMouvement(attackSpeed);
-                lastSeenTarget = target;
-                isSuspicious = true;
-            }
-            else if (isSuspicious)
-            {
-                SuspiciousBehavior();
-            }
-            else
-            {
-                PatrolBehaviour();
             }
         }
 
@@ -125,19 +139,16 @@ namespace unciphering.Controller
         {
             if(Vector3.Distance(transform.position, lastSeenTarget) > 5)
             {
-                Debug.Log(gameObject.name + "Is MOVING TO that last seen");
                 transform.position = Vector3.MoveTowards(transform.position, lastSeenTarget, attackSpeed * Time.deltaTime);
                 timeSinceLastSeenPlayer = 0;
             }
             else
             {
-                Debug.Log(Vector3.Distance(transform.position, lastSeenTarget));
-                Debug.Log(gameObject.name + "Is At that last seen");
                 if (timeSinceLastSeenPlayer > suspicionTime)
                 {
                     isSuspicious = false;
+                   // isProvoked = false;
                 }
-                
             }
             
         }
@@ -145,9 +156,16 @@ namespace unciphering.Controller
         private bool InAttackRangeOfPlayer()
         {
             float DistanceToPlayer = Vector3.Distance(target, transform.position);
+
             if(DistanceToPlayer < attackDistance)
             {
-                return true;
+                if (InLineOfSight())
+                {
+                    return true;
+                }
+                else {
+                    return false;
+                }
             }
             else
             { 
@@ -158,7 +176,7 @@ namespace unciphering.Controller
         private bool InFollowRangeOfPlayer()
         {
             float DistanceToPlayer = Vector3.Distance(target, transform.position);
-            if(DistanceToPlayer < chaseDistance)
+            if(DistanceToPlayer < chaseDistance && InLineOfSight())
             {
                 return true;
             }
@@ -168,5 +186,41 @@ namespace unciphering.Controller
             }
         }
 
+
+        private bool InLineOfSight()
+        {
+            float angleToTarget = Vector3.Angle(transform.forward, transform.position - target);
+            RaycastHit hit;
+            if (Mathf.Abs(angleToTarget) > 90 && Mathf.Abs(angleToTarget) < 270)
+            {
+                if (Physics.Raycast(transform.position, target - transform.position, out hit, 1000))
+                {
+                    if (hit.transform.GetComponent<ShipController>())
+                    {
+                        return true;
+                    }
+                    else return false;
+                }
+                else return false;
+            }
+            else 
+            {
+                return false;
+            }
+        }
+
+
+        private void OnParticleCollision(GameObject other) 
+        {
+            collisionEvents = new List<ParticleCollisionEvent>();
+            GetComponent<ParticleSystem>().GetCollisionEvents(other, collisionEvents);
+            for (int i = 0; i < collisionEvents.Count; i++)
+            {
+                if (mainPlayer)
+                {   
+                    mainPlayer.OnDeath();
+                }
+            }  
+        }
     }
 }

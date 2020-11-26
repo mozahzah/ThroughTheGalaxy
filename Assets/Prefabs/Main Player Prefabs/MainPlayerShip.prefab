@@ -236,7 +236,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -5188,6 +5188,16 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+    - target: {fileID: 4434958101007574024, guid: 5c7fc88c02b7f2a4385a010bef67af09,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7fd4c09945cbf6644b525a8108deead2, type: 2}
+    - target: {fileID: 4443338361647822132, guid: 5c7fc88c02b7f2a4385a010bef67af09,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300012, guid: ec2ed6fafcc53c64ba923b9ef7d5749f, type: 3}
     - target: {fileID: 4454179473115840916, guid: 5c7fc88c02b7f2a4385a010bef67af09,
         type: 3}
       propertyPath: m_LocalPosition.x

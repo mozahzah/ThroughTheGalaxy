@@ -1,5 +1,6 @@
 ﻿
 using UnityEngine;
+using unciphering.Controller;
 
 namespace unciphering.Characters
 {
@@ -50,6 +51,7 @@ namespace unciphering.Characters
 
         public void ProcessDamage(float damage)
         {
+            GetComponent<AIController>().isProvoked = true;
             health -= damage;
         }
     }
