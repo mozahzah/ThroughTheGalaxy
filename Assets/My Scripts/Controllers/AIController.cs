@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using unciphering.Mechanics;
+using unciphering.Characters;
 
 namespace unciphering.Controller
 {
@@ -14,7 +16,7 @@ namespace unciphering.Controller
         Vector3 target;
         Vector3 lastSeenTarget;
         bool isSuspicious;
-        public bool isProvoked;
+
         private List<ParticleCollisionEvent> collisionEvents;
 
         // Patrol Params
@@ -51,20 +53,25 @@ namespace unciphering.Controller
 
         void Update()
         {
-            if (isProvoked)
+            target = mainPlayer.gameObject.transform.position;
+            if (InAttackRangeOfPlayer())
             {
-                Debug.Log("Provoked");
                 AttackBehaviour();
+            }
+            else if (InFollowRangeOfPlayer() || GetComponent<Enemy>().isProvoked)
+            {
+                FollowBehavior();
+                AlertNearByAllies();
+            }
+            else if (!InFollowRangeOfPlayer() && isSuspicious)
+            {
+                SuspiciousBehavior();
             }
             else 
             {
-                Debug.Log("Patrolling");
                 PatrolBehaviour();
             }
-            Debug.Log(isProvoked);
             
-
-            target = mainPlayer.gameObject.transform.position;
             timeSinceLastArrivedAtWaypoint += Time.deltaTime;
             timeSinceLastSeenPlayer += Time.deltaTime;
         }
@@ -108,31 +115,20 @@ namespace unciphering.Controller
             return patrolPath.GetWaypoint(currentWaypointIndex);
         }
 
-
         private void AttackBehaviour()
         {
-            if (InAttackRangeOfPlayer())
-            {
-                engine.ProcessLook(target);
-                //gun.Fire();
-            }
-            // if (InFollowRangeOfPlayer())
-            // {
-            //     gun.StopFire();
-            //     engine.ProcessLook(target); 
-            //     engine.BasicMouvement(attackSpeed);
-            //     lastSeenTarget = target;
-            //     isSuspicious = true;
-            // }
-            // else if (isSuspicious)
-            // {
-            //     SuspiciousBehavior();
-            // }
-            else 
-            {
-                engine.ProcessLook(target); 
-                engine.BasicMouvement(attackSpeed);
-            }
+            engine.ProcessLook(target);
+            //gun.Fire();
+        }
+
+        private void FollowBehavior()
+        {
+            if (gun == null && engine == null) {print("No gun or Engine Found"); return;}
+            //gun.StopFire();
+            engine.ProcessLook(target);
+            engine.BasicMouvement(attackSpeed);
+            lastSeenTarget = target;
+            isSuspicious = true;
         }
 
         private void SuspiciousBehavior()
@@ -147,10 +143,9 @@ namespace unciphering.Controller
                 if (timeSinceLastSeenPlayer > suspicionTime)
                 {
                     isSuspicious = false;
-                   // isProvoked = false;
+                    GetComponent<Enemy>().isProvoked = false;
                 }
             }
-            
         }
 
         private bool InAttackRangeOfPlayer()
@@ -163,7 +158,8 @@ namespace unciphering.Controller
                 {
                     return true;
                 }
-                else {
+                else 
+                {
                     return false;
                 }
             }
@@ -182,24 +178,27 @@ namespace unciphering.Controller
             }
             else
             { 
-                return false; 
+                return false;
             }
         }
 
 
         private bool InLineOfSight()
         {
+            Debug.Log("here");
             float angleToTarget = Vector3.Angle(transform.forward, transform.position - target);
             RaycastHit hit;
             if (Mathf.Abs(angleToTarget) > 90 && Mathf.Abs(angleToTarget) < 270)
             {
                 if (Physics.Raycast(transform.position, target - transform.position, out hit, 1000))
                 {
+                    Debug.Log(hit.collider.gameObject.name);
                     if (hit.transform.GetComponent<ShipController>())
                     {
+                        GetComponent<Enemy>().isProvoked = true;
                         return true;
                     }
-                    else return false;
+                    else {GetComponent<Enemy>().isProvoked = false; return false;}
                 }
                 else return false;
             }
@@ -209,6 +208,18 @@ namespace unciphering.Controller
             }
         }
 
+        private void AlertNearByAllies()
+        {
+            Int32 layerMask = 1 << 11;
+            RaycastHit[] targetedEnemies;
+            RaycastHit[] hits = Physics.SphereCastAll(transform.position, 
+            50, transform.TransformDirection(Vector3.forward), 1, layerMask);
+            targetedEnemies = Array.FindAll(hits, e => e.collider.gameObject.GetComponent<Enemy>());
+            foreach (var e in targetedEnemies)
+            {
+                e.collider.gameObject.GetComponent<Enemy>().isProvoked = true;
+            }
+        }
 
         private void OnParticleCollision(GameObject other) 
         {

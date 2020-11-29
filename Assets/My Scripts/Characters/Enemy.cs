@@ -1,6 +1,6 @@
 ﻿
 using UnityEngine;
-using unciphering.Controller;
+
 
 namespace unciphering.Characters
 {
@@ -9,6 +9,7 @@ namespace unciphering.Characters
         // Utility Params
         public bool isSelected;
         public float health = 100;
+        public bool isProvoked;
 
         // Visual Params
         [SerializeField] GameObject explosionVFX;
@@ -51,8 +52,8 @@ namespace unciphering.Characters
 
         public void ProcessDamage(float damage)
         {
-            GetComponent<AIController>().isProvoked = true;
             health -= damage;
+            isProvoked = true;
         }
     }
 }

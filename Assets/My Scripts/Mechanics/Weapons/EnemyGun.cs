@@ -2,41 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyGun : MonoBehaviour
+
+namespace unciphering.Mechanics
 {
-    ParticleSystem machineGun;
-    public bool isFiring;
-    //List<ParticleCollisionEvent> particleCollisionEvents;
-
-    // Start is called before the first frame update
-    void Start()
+    public class EnemyGun : MonoBehaviour
     {
-        //particleCollisionEvents = new List<ParticleCollisionEvent>();
-        machineGun = GetComponent<ParticleSystem>();
-    }
+        ParticleSystem machineGun;
+        public bool isFiring;
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    public void Fire()
-    {
-        if (!isFiring)
+        // Start is called before the first frame update
+        void Start()
         {
-            machineGun.Play();
-            isFiring = true;
+            machineGun = GetComponent<ParticleSystem>();
         }
-    }
 
-    public void StopFire()
-    {
-        machineGun.Stop();
-        isFiring = false;
-    }
+        public void Fire()
+        {
+            if (!isFiring)
+            {
+                machineGun.Play();
+                isFiring = true;
+            }
+        }
 
-    private void OnParticleCollision(GameObject other) {
-        //Debug.Log(other.gameObject.name);
+        public void StopFire()
+        {
+            machineGun.Stop();
+            isFiring = false;
+        }
     }
 }

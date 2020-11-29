@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 namespace unciphering.Characters
 {
     public class MainShip : MonoBehaviour
