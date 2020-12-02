@@ -29,14 +29,14 @@ namespace unciphering.Controller
         [Header("Patrol Settings")]
         [SerializeField][Tooltip("in sec")] [Range(0,5)] float dwellTime = 0.5f;
         [SerializeField][Tooltip("in sec")] [Range(0,5)] float suspicionTime = 2;
-        [SerializeField][Tooltip("in m/s")] [Range(0,50)]float patrolSpeed = 20;
+        [SerializeField][Tooltip("in m/s")] [Range(0,100)]float patrolSpeed = 20;
         
 
         // Attack Params
         [Header("Attack Settings")]
         [SerializeField][Tooltip("in m")] float chaseDistance = 60;
         [SerializeField][Tooltip("in m")] float attackDistance = 30;
-        [SerializeField][Tooltip("in m/s")] [Range(0,50)] float attackSpeed = 30;
+        [SerializeField][Tooltip("in m/s")] [Range(0,100)] float attackSpeed = 30;
         
         void Start()
         {
@@ -135,7 +135,9 @@ namespace unciphering.Controller
         {
             if(Vector3.Distance(transform.position, lastSeenTarget) > 5)
             {
-                transform.position = Vector3.MoveTowards(transform.position, lastSeenTarget, attackSpeed * Time.deltaTime);
+                //transform.position = Vector3.MoveTowards(transform.position, lastSeenTarget, attackSpeed * Time.deltaTime);
+                engine.ProcessLook(lastSeenTarget);
+                engine.BasicMouvement(attackSpeed);
                 timeSinceLastSeenPlayer = 0;
             }
             else
@@ -185,7 +187,6 @@ namespace unciphering.Controller
 
         private bool InLineOfSight()
         {
-            Debug.Log("here");
             float angleToTarget = Vector3.Angle(transform.forward, transform.position - target);
             RaycastHit hit;
             if (Mathf.Abs(angleToTarget) > 90 && Mathf.Abs(angleToTarget) < 270)
@@ -213,7 +214,7 @@ namespace unciphering.Controller
             Int32 layerMask = 1 << 11;
             RaycastHit[] targetedEnemies;
             RaycastHit[] hits = Physics.SphereCastAll(transform.position, 
-            50, transform.TransformDirection(Vector3.forward), 1, layerMask);
+            100, transform.TransformDirection(Vector3.forward), 1, layerMask);
             targetedEnemies = Array.FindAll(hits, e => e.collider.gameObject.GetComponent<Enemy>());
             foreach (var e in targetedEnemies)
             {

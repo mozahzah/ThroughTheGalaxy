@@ -42,6 +42,9 @@ namespace unciphering.Controller
 
         void Update()
         {
+            //Debug.Log(transform.position);
+
+
             ProcessMovement();
             SwitchWeapon();
             ReleaseDroneBot();
