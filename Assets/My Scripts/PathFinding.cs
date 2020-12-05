@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PathFinding 
+public class PathFinding
 {
     private const int STRAIGHT_COST = 10;
     private const int DIAGONAL_COST = 14;
 
-
+    public static PathFinding Instance{get; private set;}
     public AStarGrid<PathNode> grid;
     private List<PathNode> openList;
     private List<PathNode> closedList;
@@ -15,13 +15,31 @@ public class PathFinding
 
     public PathFinding(int width, int height, int depth)
     {
-       grid = new AStarGrid<PathNode>(width, height, depth, 10f, (AStarGrid<PathNode> g, int x, int y, int z) => new PathNode(g,x,y,z));
+        Instance = this;
+        grid = new AStarGrid<PathNode>(width, height, depth, 10f, (AStarGrid<PathNode> g, int x, int y, int z) => new PathNode(g,x,y,z));
     }
 
     public AStarGrid<PathNode> GetGrid()
     {
         return grid;
     }
+
+    public List<Vector3> FindVector3Path(Vector3 start, Vector3 end)
+    {
+        //PathNode startNode = grid.GetValue(start);
+        //PathNode endNode = grid.GetValue(end);
+
+        List<PathNode> path = FindPath(start, end);
+        if (path == null){return null;}
+        else {
+            List<Vector3> vectorPath = new List<Vector3>();
+            foreach (PathNode pathNode in path){
+                vectorPath.Add(pathNode.GetVector3());
+            }
+            return vectorPath;
+        }
+    }
+
     public List<PathNode> FindPath(Vector3 start, Vector3 end)
     {
         PathNode startNode = grid.GetValue(start);
@@ -39,6 +57,7 @@ public class PathFinding
                     pathNode.gCost = int.MaxValue;
                     pathNode.CalculateFCost();
                     pathNode.previousNode = null;
+                    pathNode.isValid = pathNode.gameObjectNode.GetComponent<GameObjectNode>().isValid;
                 }
             }
         }
@@ -62,6 +81,11 @@ public class PathFinding
             foreach (PathNode neighbourNode in GetNeighbourList(currentNode))
             {
                 if (closedList.Contains(neighbourNode)) continue;
+                if (!neighbourNode.isValid) 
+                {
+                    closedList.Add(neighbourNode);
+                    continue;
+                }
 
                 int tentativeGCost = currentNode.gCost + CalculateDistanceCost(currentNode, neighbourNode);
                 if (tentativeGCost < neighbourNode.gCost)
@@ -80,6 +104,7 @@ public class PathFinding
         }
 
         // out of open list
+        Debug.Log("NO PATH");
         return null;
     }
 
@@ -99,10 +124,8 @@ public class PathFinding
             }
             // Current Plane
             GetNeighbourPlane(currentNode, neighbourList, currentNode.z);
-            
             return neighbourList;
     }
-
     private void GetNeighbourPlane(PathNode currentNode, List<PathNode> neighbourList, int depthIndex)
     {
         if (currentNode.x - 1 >= 0)
@@ -152,16 +175,16 @@ public class PathFinding
         int xDistance = Mathf.Abs(a.x - b.x);
         int yDistance = Mathf.Abs(a.y - b.y);
         int zDistance = Mathf.Abs(a.z - b.z);
-        //int remaining = Mathf.Abs(xDistance - yDistance - zDistance);
-        int remaining = Mathf.FloorToInt(Vector3.Distance(new Vector3(a.x,a.y,a.z), new Vector3(b.x,b.y,b.z)));
-        return DIAGONAL_COST * Mathf.Min(xDistance,yDistance,zDistance) + STRAIGHT_COST * remaining;
+        return DIAGONAL_COST * Mathf.FloorToInt(Mathf.Sqrt(xDistance*xDistance + yDistance*yDistance + zDistance*zDistance));
     }
 
     private PathNode GetLowestFCostNode(List<PathNode> pathNodes)
     {
         PathNode lowestFCostNode = pathNodes[0];
-        for (int i = 1; i < pathNodes.Count; i++){
-            if (pathNodes[i].fCost < lowestFCostNode.fCost){
+        for (int i = 1; i < pathNodes.Count; i++)
+        {
+            if (pathNodes[i].fCost < lowestFCostNode.fCost)
+            {
                 lowestFCostNode = pathNodes[i];
             }
         }

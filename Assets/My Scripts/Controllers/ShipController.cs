@@ -67,7 +67,7 @@ namespace unciphering.Controller
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                SceneManager.LoadScene(2);
+               SceneManager.LoadScene(0);
             }
 
 
