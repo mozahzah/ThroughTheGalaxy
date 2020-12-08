@@ -118,7 +118,7 @@ namespace unciphering.Controller
         private void AttackBehaviour()
         {
             engine.ProcessLook(target);
-            //gun.Fire();
+            gun.Fire();
         }
 
         private void FollowBehavior()

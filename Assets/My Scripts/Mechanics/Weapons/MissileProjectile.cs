@@ -12,7 +12,7 @@ namespace unciphering.Mechanics
         bool isMissileLaunched;
 
         [SerializeField] float speed = 50;
-        float floatingTime = 1.5f;
+        [SerializeField] float floatingTime = 1.5f;
         float initialTime;
         float lifeTime;
 

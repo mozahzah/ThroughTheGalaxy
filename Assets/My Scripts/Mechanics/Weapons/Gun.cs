@@ -53,7 +53,7 @@ namespace unciphering.Mechanics
             targetedEnemies = new RaycastHit[5];
             audioSource = GetComponent<AudioSource>();
             MG_BulletParticleSystem = GetComponent<ParticleSystem>();
-            SetMGWeaponStats();
+            //SetMGWeaponStats();
             layerMask = 1 << 11;
         }
 
@@ -240,7 +240,7 @@ namespace unciphering.Mechanics
         private void SetMGWeaponStats()
         {
             MG_WeaponStats.ammoAmount = 100;
-            MG_WeaponStats.damage = 20;
+            MG_WeaponStats.damage = 1;
             MG_WeaponStats.reloadTime = 0;
         }
         private void ProcessMGFire()

@@ -126,7 +126,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9763a8634c9ddde4cbc2dd923b73cc94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 30
+  speed: 50
+  floatingTime: 1
+  lifeTime: 10
+  destructionTime: 2
   audioClips:
   - {fileID: 8300000, guid: ec702f2d806c4504c946abf3d6b72f71, type: 3}
   - {fileID: 8300000, guid: 38c93790b39af0f43ac9bfc17dcd949d, type: 3}

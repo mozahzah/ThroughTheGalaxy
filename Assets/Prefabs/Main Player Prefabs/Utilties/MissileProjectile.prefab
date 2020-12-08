@@ -64,7 +64,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96f1a82ddee58c34098401d27cfc1f79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 50
+  speed: 100
+  floatingTime: 0.2
   _particleSystem: {fileID: 19800006}
   audioClips:
   - {fileID: 8300000, guid: 9ce91f8cef129724a8723bd8f45b7faf, type: 3}

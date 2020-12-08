@@ -12,10 +12,11 @@ namespace unciphering.Mechanics
         Enemy currentEnemy;
 
         [SerializeField] float speed = 30;
-        float floatingTime = 2;
+        [SerializeField] float floatingTime = 2;
         float initialTime;
         float initialTimeForDestruction;
-        float lifeTime;
+        [SerializeField] float lifeTime;
+        [SerializeField] float destructionTime = 2;
 
         bool destructionActivated;
         bool isNanoLaunched;
@@ -49,7 +50,7 @@ namespace unciphering.Mechanics
 
             if (destructionActivated)
             {
-                if (Time.timeSinceLevelLoad - initialTimeForDestruction > 2)
+                if (Time.timeSinceLevelLoad - initialTimeForDestruction > destructionTime)
                 {
                     currentEnemy.ProcessDamage(damage);
                     Destroy(gameObject);
