@@ -72,10 +72,10 @@ namespace unciphering.Mechanics
         private void CrossairAim()
         {
             Vector3 crossairLocation = Camera.main.
-            ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0f));
+            ViewportToWorldPoint(new Vector3(0f, 0f, 0f));
             RaycastHit hit;
             //Debug.DrawLine(crossairLocation, Camera.main.transform.TransformDirection(Vector3.forward) * 10000, Color.red);
-            if (Physics.Linecast(crossairLocation, Camera.main.transform.TransformDirection(Vector3.forward) * 10000, out hit, layerMask))
+            if (Physics.Linecast(crossairLocation, Camera.main.transform.forward * 10000, out hit, layerMask))
             {
                 transform.LookAt(hit.point);
             }
