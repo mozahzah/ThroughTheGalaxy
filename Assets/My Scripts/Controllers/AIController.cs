@@ -43,6 +43,7 @@ namespace unciphering.Controller
             gun = GetComponent<EnemyGun>();
             target = mainPlayer.gameObject.transform.position;
             engine = GetComponent<Engine>();
+            gameObject.transform.position = patrolPath.transform.position;
         }
 
         private void OnDrawGizmos() 
