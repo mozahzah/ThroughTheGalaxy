@@ -19,7 +19,8 @@ Release Scout Drone: G
 Use Scout Ability 1 (Tag Single Enemy) : Left Mouse Click
 Use Scout Ability 2 (Tag Multiple Enemies) : Right Mouse Click
 
+To Access the WIN(x86) Installer use this link
+https://drive.google.com/file/d/1PsrPskcGaTMw7NdlYsH0t06oYTQPYpYm/view?usp=sharing
 
 To Access the MAC Build use this link
-
 https://drive.google.com/file/d/1wQBM1K56TZzcDO2iTS4agvYZ5QMvWwjF/view?usp=sharing
